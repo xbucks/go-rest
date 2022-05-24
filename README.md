@@ -81,7 +81,7 @@ Choose a command to run in go-rest-api-example:
 - [ ] Seed local DB and add DB Migration Support
 - [ ] Add more unit tests
 - [ ] Add more profiles and obey all [12-Factor App rules](https://12factor.net/ru/)
-- [ ] Add CI/CD tooling
+- [ ] Add CI/CD tooling & Necessary Github hooks
 - [ ] Add missing references/inspirations
 - [ ] Improvements to the api in terms of error handling, proper messaging etc., ( that wasn't focus)
 - [ ] API Documentation - Lot of potential to improve
