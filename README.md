@@ -29,7 +29,7 @@ Pre-requisites:
 
         http://localhost:8080
 
-   If you are a fan of Postman, import the included Postman collection which is actually a better option as DB is not
+   If you are a fan of Postman, import the included [Postman collection](Orders.postman_collection.json) which is actually a better option as DB is not
    seeded yet.
 
 Other Options:
