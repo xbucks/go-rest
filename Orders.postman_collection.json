@@ -1,0 +1,169 @@
+{
+	"info": {
+		"_postman_id": "4513b26b-eb10-4cca-886a-7704799f9a51",
+		"name": "Orders",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1129965"
+	},
+	"item": [
+		{
+			"name": "Check Health",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}:{{port}}/health",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all Orders",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}:{{port}}/api/v1/orders",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"v1",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get One Order",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}:{{port}}/api/v1/orders/628c556112951bff10538abc",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"v1",
+						"orders",
+						"628c556112951bff10538abc"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get One Order - Bad Request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}:{{port}}/api/v1/orders/628c545c0a9474f2c15a2ce2",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"v1",
+						"orders",
+						"628c545c0a9474f2c15a2ce2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete One Order",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{host}}:{{port}}/api/v1/orders/628c545c0a9474f2c15a2ce2",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"v1",
+						"orders",
+						"628c545c0a9474f2c15a2ce2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create - New Order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"products\": [{\n        \"name\": \"iphone13\",\n        \"price\": 1300\n    }, {\n        \"name\": \"iphone12\",\n        \"price\": 1200\n    }, {\n        \"name\": \"iphone11\",\n        \"price\": 1100\n    }, {\n        \"name\": \"iphoneX\",\n        \"price\": 1000\n    }]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}:{{port}}/api/v1/orders",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"v1",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"order_id\": \"628c556112951bff10538abc\",\n    \"products\": [{\n        \"name\": \"iphone14\",\n        \"price\": 1300\n    }]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}:{{port}}/api/v1/orders",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"v1",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

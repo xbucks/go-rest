@@ -1,5 +1,6 @@
 /tmp
 *.log
+*.pid
 go-rest-api-example
 
 # Created by https://www.toptal.com/developers/gitignore/api/go,intellij+iml,vs
