@@ -11,8 +11,7 @@ const docTemplate = `{
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
         "contact": {
-            "name": "Ramesh Sunkara",
-            "email": "ramesh.sunkara@hpe.com"
+            "name": "Ramesh Sunkara"
         },
         "version": "{{.Version}}"
     },
@@ -63,10 +62,7 @@ const docTemplate = `{
                 "summary": "Fetch all orders",
                 "responses": {
                     "200": {
-                        "description": "answer",
-                        "schema": {
-                            "type": "string"
-                        }
+                        "description": ""
                     }
                 }
             },
@@ -84,17 +80,14 @@ const docTemplate = `{
                 "summary": "Creates or Updates an order",
                 "responses": {
                     "200": {
-                        "description": "answer",
-                        "schema": {
-                            "type": "string"
-                        }
+                        "description": ""
                     }
                 }
             }
         },
         "/orders/{id}": {
             "get": {
-                "description": "Fetch single PurchaseOrder document identified by give id",
+                "description": "Fetch single Order document identified by give id",
                 "consumes": [
                     "application/json"
                 ],
@@ -104,7 +97,7 @@ const docTemplate = `{
                 "tags": [
                     "Fetch"
                 ],
-                "summary": "Fetch single PurchaseOrder document identified by give id",
+                "summary": "Fetch single Order document identified by give id",
                 "parameters": [
                     {
                         "type": "string",
@@ -116,25 +109,43 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "answer",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "400": {
-                        "description": "ok",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "404": {
-                        "description": "ok",
-                        "schema": {
-                            "type": "string"
-                        }
+                        "description": ""
                     },
                     "500": {
-                        "description": "ok",
+                        "description": "bad request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete single Order document identified by give id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Fetch"
+                ],
+                "summary": "Delete single Order document identified by give id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Order ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    },
+                    "500": {
+                        "description": "bad request",
                         "schema": {
                             "type": "string"
                         }

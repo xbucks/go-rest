@@ -4,9 +4,11 @@
 
 There are many open source boilerplate repos but why I did this ?
 
-1. Coming from years of building Full Stack application in ReactJS and JVM based languages, I did not like any of them completely. 
-   So I created my own while obeying 'GO' principles and guidelines. 
-   You will find a lot of similarities in this repo when compared to the most popular go boilerplate templates because I probably borrowed
+1. Coming from years of building Full Stack application in ReactJS and JVM based languages, I did not like any of them
+   completely.
+   So I created my own while obeying 'GO' principles and guidelines.
+   You will find a lot of similarities in this repo when compared to the most popular go boilerplate templates because I
+   probably borrowed
    ideas from them. (my apologies if I failed to miss any of them in the references)
 
 2. I want to pick the tools for Routing, Logging, Configuration Management etc., to my liking and preferences.
@@ -26,8 +28,9 @@ Pre-requisites:
 2. Visit Swagger API in browser
 
         http://localhost:8080
-  
-    If you are a fan of Postman, import the included Postman collection which is actually a better option as DB is not seeded yet.
+
+   If you are a fan of Postman, import the included Postman collection which is actually a better option as DB is not
+   seeded yet.
 
 Other Options:
 
@@ -51,7 +54,6 @@ Choose a command to run in go-rest-api-example:
       lint                                       Runs golint on all Go packages (TODO)
       fmt                                        Run format "go fmt" on all Go packages
       api-docs                                   Generate OpenAPI3 Spec
-
 
 ### Tools
 
@@ -82,6 +84,7 @@ Choose a command to run in go-rest-api-example:
 - [ ] Add CI/CD tooling
 - [ ] Add missing references/inspirations
 - [ ] Improvements to the api in terms of error handling, proper messaging etc., ( that wasn't focus)
+- [ ] API Documentation - Lot of potential to improve
 
 ### References
 

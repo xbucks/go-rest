@@ -16,7 +16,7 @@ import (
 
 // @contact.name    Ramesh Sunkara
 // @contact.url
-// @contact.email   ramesh.sunkara@hpe.com
+// @contact.email
 
 // @host      localhost:8080
 // @BasePath  /api/v1

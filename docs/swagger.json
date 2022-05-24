@@ -1,139 +1,150 @@
 {
-    "swagger": "2.0",
-    "info": {
-        "description": "A sample service to demonstrate how to develop REST API in golang",
-        "title": "GO Rest Example API Service (Purchase Order Tracker)",
-        "contact": {
-            "name": "Ramesh Sunkara",
-            "email": "ramesh.sunkara@hpe.com"
-        },
-        "version": "1.0"
+  "swagger": "2.0",
+  "info": {
+    "description": "A sample service to demonstrate how to develop REST API in golang",
+    "title": "GO Rest Example API Service (Purchase Order Tracker)",
+    "contact": {
+      "name": "Ramesh Sunkara"
     },
-    "host": "localhost:8080",
-    "basePath": "/api/v1",
-    "paths": {
-        "/health": {
-            "get": {
-                "description": "Provides the current status/health of the service. It checks the health of all the critical components of the service.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "text/plain"
-                ],
-                "tags": [
-                    "Status"
-                ],
-                "summary": "Status/Health of the service (Doesn't work in Swagger UI)",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "503": {
-                        "description": "Something is wrong",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
+    "version": "1.0"
+  },
+  "host": "localhost:8080",
+  "basePath": "/api/v1",
+  "paths": {
+    "/health": {
+      "get": {
+        "description": "Provides the current status/health of the service. It checks the health of all the critical components of the service.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "text/plain"
+        ],
+        "tags": [
+          "Status"
+        ],
+        "summary": "Status/Health of the service (Doesn't work in Swagger UI)",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "string"
             }
-        },
-        "/orders/": {
-            "get": {
-                "description": "Fetches all orders",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Fetch"
-                ],
-                "summary": "Fetch all orders",
-                "responses": {
-                    "200": {
-                        "description": "answer",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "Used to either create or update an order",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Fetch"
-                ],
-                "summary": "Creates or Updates an order",
-                "responses": {
-                    "200": {
-                        "description": "answer",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
+          },
+          "503": {
+            "description": "Something is wrong",
+            "schema": {
+              "type": "string"
             }
-        },
-        "/orders/{id}": {
-            "get": {
-                "description": "Fetch single PurchaseOrder document identified by give id",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Fetch"
-                ],
-                "summary": "Fetch single PurchaseOrder document identified by give id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Order ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "answer",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "400": {
-                        "description": "ok",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "404": {
-                        "description": "ok",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "ok",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
+          }
         }
+      }
+    },
+    "/orders/": {
+      "get": {
+        "description": "Fetches all orders",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Fetch"
+        ],
+        "summary": "Fetch all orders",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "post": {
+        "description": "Used to either create or update an order",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Fetch"
+        ],
+        "summary": "Creates or Updates an order",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/orders/{id}": {
+      "get": {
+        "description": "Fetch single Order document identified by give id",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Fetch"
+        ],
+        "summary": "Fetch single Order document identified by give id",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Order ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "500": {
+            "description": "bad request",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete single Order document identified by give id",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Fetch"
+        ],
+        "summary": "Delete single Order document identified by give id",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Order ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "500": {
+            "description": "bad request",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
     }
+  }
 }

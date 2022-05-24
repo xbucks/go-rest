@@ -18,8 +18,8 @@ type OrdersController struct {
 // @Tags         Fetch
 // @Accept       json
 // @Produce      json
-// @Success      200            {int64}
-// @Router       /orders/ [post, put]
+// @Success      200
+// @Router       /orders/ [post]
 func (ordersController *OrdersController) Post(c *gin.Context) {
 	purchaseRequest := models.Order{}
 
@@ -49,7 +49,7 @@ func (ordersController *OrdersController) Post(c *gin.Context) {
 // @Tags         Fetch
 // @Accept       json
 // @Produce      json
-// @Success      200            {[]models.Order{}}
+// @Success      200
 // @Router       /orders/ [get]
 func (ordersController *OrdersController) GetAll(c *gin.Context) {
 	log.Logger.Debug("fetch all documents of purchase orders")
@@ -70,7 +70,7 @@ func (ordersController *OrdersController) GetAll(c *gin.Context) {
 // @Tags         Fetch
 // @Accept       json
 // @Produce      json
-// @Success      200            {models.Order{}}
+// @Success      200
 // @Failure      500            {string}  string  "bad request"
 // @Router       /orders/{id} [get]
 func (ordersController *OrdersController) GetById(c *gin.Context) {
@@ -96,7 +96,7 @@ func (ordersController *OrdersController) GetById(c *gin.Context) {
 // @Tags         Fetch
 // @Accept       json
 // @Produce      json
-// @Success      200            {int64}  int64  "Count"
+// @Success      200
 // @Failure      500            {string}  string  "bad request"
 // @Router       /orders/{id} [delete]
 func (ordersController *OrdersController) DeleteById(c *gin.Context) {

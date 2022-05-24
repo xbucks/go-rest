@@ -2,7 +2,6 @@ basePath: /api/v1
 host: localhost:8080
 info:
   contact:
-    email: ramesh.sunkara@hpe.com
     name: Ramesh Sunkara
   description: A sample service to demonstrate how to develop REST API in golang
   title: GO Rest Example API Service (Purchase Order Tracker)
@@ -37,9 +36,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: answer
-          schema:
-            type: string
+          description: ""
       summary: Fetch all orders
       tags:
       - Fetch
@@ -51,17 +48,15 @@ paths:
       - application/json
       responses:
         "200":
-          description: answer
-          schema:
-            type: string
+          description: ""
       summary: Creates or Updates an order
       tags:
       - Fetch
   /orders/{id}:
-    get:
+    delete:
       consumes:
       - application/json
-      description: Fetch single PurchaseOrder document identified by give id
+      description: Delete single Order document identified by give id
       parameters:
       - description: Order ID
         in: path
@@ -72,22 +67,34 @@ paths:
       - application/json
       responses:
         "200":
-          description: answer
-          schema:
-            type: string
-        "400":
-          description: ok
-          schema:
-            type: string
-        "404":
-          description: ok
-          schema:
-            type: string
+          description: ""
         "500":
-          description: ok
+          description: bad request
           schema:
             type: string
-      summary: Fetch single PurchaseOrder document identified by give id
+      summary: Delete single Order document identified by give id
+      tags:
+      - Fetch
+    get:
+      consumes:
+      - application/json
+      description: Fetch single Order document identified by give id
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+        "500":
+          description: bad request
+          schema:
+            type: string
+      summary: Fetch single Order document identified by give id
       tags:
       - Fetch
 swagger: "2.0"
