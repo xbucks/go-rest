@@ -87,6 +87,7 @@ Choose a command to run in go-rest-api-example:
 
 - [gin-boilerplate](https://github.com/Massad/gin-boilerplate)
 - [go-rest-api](https://github.com/qiangxue/go-rest-api)
+- [go-base](https://github.com/dhax/go-base)
 
 ### Contribute
 
