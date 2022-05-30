@@ -40,9 +40,7 @@ Pre-requisites: Docker, Docker Compose, [Swag](https://github.com/swaggo/swag), 
 
 1. Start the service in live reload mode
 
-        ```bash
-                make develop
-        ```
+        make develop
 
 2. Use postman to explore the exising APIs, start with SeedDB request.
 
