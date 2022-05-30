@@ -85,10 +85,9 @@ Choose a command to run in go-rest-api-example:
 
 ### TODO
 
-- [ ] Update Makefile to make life easy
 - [ ] Add more and clear documentation about the features this offers and how to replace tools
-- [ ] Automate Open API3 Spec Generation
-- [ ] Seed local DB and add DB Migration Support
+- [ ] Automate Open API3 Spec Generation completely
+- [ ] Seed local DB through docker and add DB Migration Support
 - [ ] Add more unit tests
 - [ ] Add more profiles and obey all [12-Factor App rules](https://12factor.net/ru/)
 - [ ] Add CI/CD tooling & Necessary Github hooks
