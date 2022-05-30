@@ -19,11 +19,13 @@ There are many open source boilerplate repos but why I did this ?
 
 Pre-requisites:
 
-- Docker, Docker Compose, [Swag](https://github.com/swaggo/swag)
+- Docker Compose
 
 1. Start the service
 
-        make start
+        ```bash
+                make start
+        ```
 
 2. Visit Swagger API in browser
 
@@ -31,6 +33,18 @@ Pre-requisites:
 
    If you are a fan of Postman, import the included [Postman collection](Orders.postman_collection.json) which is actually a better option as DB is not
    seeded yet.
+
+### QuickStart - Develop
+
+Pre-requisites: Docker, Docker Compose, [Swag](https://github.com/swaggo/swag), fswatch
+
+1. Start the service in live reload mode
+
+        ```bash
+                make develop
+        ```
+
+2. Use postman to explore the exising APIs, start with SeedDB request.
 
 Other Options:
 

@@ -29,7 +29,7 @@ func (orderCrudService *OrdersCrudService) CreateOrder(purchaseOrder *models.Ord
 		return nil, err
 	}
 
-	if purchaseOrder.ID.IsZero() == false {
+	if !purchaseOrder.ID.IsZero() {
 		return nil, errors.New("invalid request")
 	}
 	purchaseOrder.LastUpdatedAt = util.CurrentISOTime()
@@ -55,8 +55,8 @@ func (orderCrudService *OrdersCrudService) UpdateOrder(purchaseOrder *models.Ord
 	purchaseOrder.LastUpdatedAt = util.CurrentISOTime()
 
 	opts := options.Update().SetUpsert(true)
-	filter := bson.D{{"_id", purchaseOrder.ID}}
-	update := bson.D{{"$set", purchaseOrder}}
+	filter := bson.D{primitive.E{Key: "_id", Value: purchaseOrder.ID}}
+	update := bson.D{primitive.E{Key: "$set", Value: purchaseOrder}}
 	result, err := orderCrudService.Collection.UpdateOne(context.TODO(), filter, update, opts)
 	if err != nil {
 		log.Logger.Error("Error occurred while updating order", zap.Error(err))
@@ -103,7 +103,7 @@ func (orderCrudService *OrdersCrudService) GetOrderByID(id string) (interface{},
 	if err != nil || !isValidId {
 		return nil, errors.New("bad request")
 	}
-	filter := bson.D{{"_id", docID}}
+	filter := bson.D{primitive.E{Key: "_id", Value: docID}}
 
 	var result models.Order
 	error := orderCrudService.Collection.FindOne(context.TODO(), filter).Decode(&result)
@@ -128,7 +128,7 @@ func (orderCrudService *OrdersCrudService) DeleteOrderByID(id string) (int64, er
 	if err != nil || !isValidId {
 		return 0, errors.New("bad request")
 	}
-	filter := bson.D{{"_id", docID}}
+	filter := bson.D{primitive.E{Key: "_id", Value: docID}}
 
 	res, error := orderCrudService.Collection.DeleteOne(context.TODO(), filter)
 	if error != nil {

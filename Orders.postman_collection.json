@@ -164,6 +164,24 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Seed DB",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{host}}:{{port}}/seedDB",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"seedDB"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
