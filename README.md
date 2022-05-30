@@ -23,9 +23,7 @@ Pre-requisites:
 
 1. Start the service
 
-        ```bash
-                make start
-        ```
+        make start
 
 2. Visit Swagger API in browser
 
@@ -42,7 +40,7 @@ Pre-requisites: Docker, Docker Compose, [Swag](https://github.com/swaggo/swag), 
 
         make develop
 
-2. Use postman to explore the exising APIs, start with SeedDB request.
+2. Use postman to explore the existing APIs, start with SeedDB request.
 
 Other Options:
 
