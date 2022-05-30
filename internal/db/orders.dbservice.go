@@ -6,6 +6,7 @@ import (
 	"go-rest-api-example/internal/models"
 	"go-rest-api-example/pkg/log"
 	"go-rest-api-example/pkg/util"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -18,6 +19,7 @@ type OrdersCrudService struct {
 }
 
 func (orderCrudService *OrdersCrudService) Prepare(database string, collection string) {
+	log.Logger.Debug("In Prepare")
 	orderCrudService.Collection = GetDBClient().Database(database).Collection(collection)
 }
 

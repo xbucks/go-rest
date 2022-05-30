@@ -1,4 +1,4 @@
-/tmp
+tmp/
 *.log
 *.pid
 go-rest-api-example

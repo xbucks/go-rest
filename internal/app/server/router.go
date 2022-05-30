@@ -1,15 +1,16 @@
 package server
 
 import (
-	"github.com/gin-gonic/gin"
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 	"go-rest-api-example/internal/controllers"
 	"go-rest-api-example/pkg/log"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-func NewRouter() *gin.Engine {
+func NewRouter(environment string) *gin.Engine {
 	gin.SetMode(gin.DebugMode)
 
 	// Middleware
@@ -22,6 +23,13 @@ func NewRouter() *gin.Engine {
 	// Routes - Health Check
 	health := new(controllers.HealthController)
 	router.GET("/health", health.Status) // /health
+
+	// Seed DB
+	if environment == "dev" {
+		seed := new(controllers.SeedDBController)
+		seed.DBService.Prepare("ecommerce", "purchaseorders")
+		router.POST("/seedDB", seed.SeedDB)
+	}
 
 	// Routes - API
 	v1 := router.Group("/api/v1")

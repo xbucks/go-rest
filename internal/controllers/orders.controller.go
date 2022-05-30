@@ -1,11 +1,12 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
 	"go-rest-api-example/internal/db"
 	"go-rest-api-example/internal/models"
 	"go-rest-api-example/pkg/log"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type OrdersController struct {
@@ -60,7 +61,6 @@ func (ordersController *OrdersController) GetAll(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"orders": orders})
-	return
 }
 
 // GetById  godoc
@@ -112,5 +112,4 @@ func (ordersController *OrdersController) DeleteById(c *gin.Context) {
 	}
 	c.JSON(http.StatusBadRequest, gin.H{"message": "bad request"})
 	c.Abort()
-	return
 }

@@ -2,8 +2,8 @@ package main
 
 import (
 	"flag"
-	"go-rest-api-example/cmd/server"
 	_ "go-rest-api-example/docs"
+	"go-rest-api-example/internal/app/server"
 	"go-rest-api-example/internal/config"
 	"go-rest-api-example/internal/db"
 	customLog "go-rest-api-example/pkg/log"
@@ -28,5 +28,5 @@ func main() {
 	defer customLog.Logger.Sync()
 	config.LoadConfig(*environment)
 	db.Init()
-	server.Init()
+	server.Init(*environment)
 }

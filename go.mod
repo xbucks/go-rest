@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	github.com/BurntSushi/toml v1.1.0 // indirect
+	github.com/bxcodec/faker/v3 v3.8.0 // indirect
 	github.com/fatih/color v1.9.0
 	github.com/gin-gonic/gin v1.7.7
 	github.com/go-openapi/spec v0.20.6 // indirect
