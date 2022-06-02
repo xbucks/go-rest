@@ -3,9 +3,10 @@ package db
 import (
 	"context"
 	"errors"
-	"go-rest-api-example/internal/models"
-	"go-rest-api-example/pkg/log"
-	"go-rest-api-example/pkg/util"
+
+	"github.com/rameshsunkara/go-rest-api-example/internal/models"
+	"github.com/rameshsunkara/go-rest-api-example/pkg/log"
+	"github.com/rameshsunkara/go-rest-api-example/pkg/util"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"

@@ -1,10 +1,11 @@
 package controllers
 
 import (
-	"go-rest-api-example/internal/db"
-	"go-rest-api-example/internal/models"
-	"go-rest-api-example/pkg/log"
 	"net/http"
+
+	"github.com/rameshsunkara/go-rest-api-example/internal/db"
+	"github.com/rameshsunkara/go-rest-api-example/internal/models"
+	"github.com/rameshsunkara/go-rest-api-example/pkg/log"
 
 	"github.com/gin-gonic/gin"
 )

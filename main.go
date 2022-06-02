@@ -2,12 +2,13 @@ package main
 
 import (
 	"flag"
-	_ "go-rest-api-example/docs"
-	"go-rest-api-example/internal/app/server"
-	"go-rest-api-example/internal/config"
-	"go-rest-api-example/internal/db"
-	customLog "go-rest-api-example/pkg/log"
 	"log"
+
+	_ "github.com/rameshsunkara/go-rest-api-example/docs"
+	"github.com/rameshsunkara/go-rest-api-example/internal/app/server"
+	"github.com/rameshsunkara/go-rest-api-example/internal/config"
+	"github.com/rameshsunkara/go-rest-api-example/internal/db"
+	customLog "github.com/rameshsunkara/go-rest-api-example/pkg/log"
 )
 
 // @title           GO Rest Example API Service (Purchase Order Tracker)

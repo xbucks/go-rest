@@ -1,8 +1,9 @@
 package server
 
 import (
-	"go-rest-api-example/internal/config"
 	"sync"
+
+	"github.com/rameshsunkara/go-rest-api-example/internal/config"
 )
 
 var runOnce sync.Once

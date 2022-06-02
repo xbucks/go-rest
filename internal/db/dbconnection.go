@@ -3,12 +3,13 @@ package db
 import (
 	"context"
 	"errors"
-	"go-rest-api-example/internal/config"
-	"go-rest-api-example/pkg/log"
-	"go.mongodb.org/mongo-driver/mongo/readpref"
-	"go.uber.org/zap"
 	"sync"
 	"time"
+
+	"github.com/rameshsunkara/go-rest-api-example/internal/config"
+	"github.com/rameshsunkara/go-rest-api-example/pkg/log"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
+	"go.uber.org/zap"
 
 	"github.com/fatih/color"
 	"go.mongodb.org/mongo-driver/mongo"

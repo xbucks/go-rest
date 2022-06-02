@@ -1,8 +1,8 @@
 package config
 
 import (
+	"github.com/rameshsunkara/go-rest-api-example/pkg/log"
 	"github.com/spf13/viper"
-	"go-rest-api-example/pkg/log"
 	"go.uber.org/zap"
 )
 

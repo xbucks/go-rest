@@ -1,10 +1,11 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
-	"go-rest-api-example/internal/db"
-	"go-rest-api-example/pkg/log"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"github.com/rameshsunkara/go-rest-api-example/internal/db"
+	"github.com/rameshsunkara/go-rest-api-example/pkg/log"
 )
 
 type HealthController struct{}

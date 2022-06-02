@@ -1,9 +1,10 @@
 package server
 
 import (
-	"go-rest-api-example/internal/controllers"
-	"go-rest-api-example/pkg/log"
 	"time"
+
+	"github.com/rameshsunkara/go-rest-api-example/internal/controllers"
+	"github.com/rameshsunkara/go-rest-api-example/pkg/log"
 
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"

@@ -30,24 +30,24 @@ develop:
 
 ## run: Run the API server alone in normal mode (without supplemantary services such as DB etc.,)
 run:
-	go run ${LDFLAGS} cmd/main.go & echo $$! >> $(PID_FILE)
+	go run ${LDFLAGS} main.go & echo $$! >> $(PID_FILE)
 
 ## restart: Restarts the API server
 restart:
 	@pkill -P `cat $(PID_FILE)` || true
 	@printf '%*s\n' "80" '' | tr ' ' -
 	@echo "Restarting server..."
-	@go run ${LDFLAGS} cmd/main.go & echo $$! > $(PID_FILE)
+	@go run ${LDFLAGS} main.go & echo $$! > $(PID_FILE)
 	@printf '%*s\n' "80" '' | tr ' ' -
 
 ## run-live: Run the API server with live reload support (requires fswatch)
 run-live:
-	@go run ${LDFLAGS} cmd/main.go & echo $$! > $(PID_FILE)
-	@fswatch -x -o --event Created --event Updated --event Renamed -r internal pkg cmd config | xargs -n1 -I {} make restart
+	@go run ${LDFLAGS} main.go & echo $$! > $(PID_FILE)
+	@fswatch -x -o --event Created --event Updated --event Renamed -r internal pkg config | xargs -n1 -I {} make restart
 
 ## build: Build the API server binary
 build:
-	CGO_ENABLED=0 go build ${LDFLAGS} -a -o ${PROJECT_NAME} $(MODULE)/cmd
+	CGO_ENABLED=0 go build ${LDFLAGS} -a -o ${PROJECT_NAME} $(MODULE)
 
 ## build-docker: Build the API server as a docker image
 build-docker:
@@ -95,7 +95,7 @@ fmt:
 
 ## api-docs: Generate OpenAPI3 Spec
 api-docs:
-	swag init -g cmd/main.go
+	swag init -g main.go
 	curl -X POST "https://converter.swagger.io/api/convert" \
 		-H "accept: application/json" \
 		-H "Content-Type: application/json" \
