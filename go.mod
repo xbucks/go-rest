@@ -22,3 +22,5 @@ require (
 	golang.org/x/sys v0.0.0-20220517195934-5e4e11fc645e // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 )
+
+replace go-rest-api-example => github.com/rameshsunkara/go-rest-api-example v0.1
