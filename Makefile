@@ -30,20 +30,24 @@ develop:
 
 ## run: Run the API server alone in normal mode (without supplemantary services such as DB etc.,)
 run:
-	go run ${LDFLAGS} main.go & echo $$! >> $(PID_FILE)
+	go run ${LDFLAGS} main.go -environment="${environment}" -version="${VERSION}" & echo $$! >> $(PID_FILE)
 
 ## restart: Restarts the API server
 restart:
 	@pkill -P `cat $(PID_FILE)` || true
 	@printf '%*s\n' "80" '' | tr ' ' -
 	@echo "Restarting server..."
-	@go run ${LDFLAGS} main.go & echo $$! > $(PID_FILE)
+	make run
 	@printf '%*s\n' "80" '' | tr ' ' -
 
 ## run-live: Run the API server with live reload support (requires fswatch)
 run-live:
-	@go run ${LDFLAGS} main.go & echo $$! > $(PID_FILE)
+	make run
 	@fswatch -x -o --event Created --event Updated --event Renamed -r internal pkg config | xargs -n1 -I {} make restart
+
+stop:
+	docker-compose down
+	@pkill -P `cat $(PID_FILE)` || true
 
 ## build: Build the API server binary
 build:

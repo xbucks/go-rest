@@ -1,9 +1,11 @@
 package server
 
 import (
+	"strings"
 	"time"
 
 	"github.com/rameshsunkara/go-rest-api-example/internal/controllers"
+	"github.com/rameshsunkara/go-rest-api-example/internal/models"
 	"github.com/rameshsunkara/go-rest-api-example/pkg/log"
 
 	"github.com/gin-gonic/gin"
@@ -11,8 +13,12 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-func NewRouter(environment string) *gin.Engine {
-	gin.SetMode(gin.DebugMode)
+func NewRouter(serviceInfo *models.ServiceMeta) *gin.Engine {
+	if strings.Contains(serviceInfo.Environment, "dev") {
+		gin.SetMode(gin.DebugMode)
+	} else {
+		gin.SetMode(gin.ReleaseMode)
+	}
 
 	// Middleware
 	router := gin.New()
@@ -22,11 +28,11 @@ func NewRouter(environment string) *gin.Engine {
 	// Routes
 
 	// Routes - Health Check
-	health := new(controllers.HealthController)
+	health := controllers.NewHealthController(serviceInfo)
 	router.GET("/health", health.Status) // /health
 
 	// Seed DB
-	if environment == "dev" {
+	if serviceInfo.Environment == "dev" {
 		seed := new(controllers.SeedDBController)
 		seed.DBService.Prepare("ecommerce", "purchaseorders")
 		router.POST("/seedDB", seed.SeedDB)

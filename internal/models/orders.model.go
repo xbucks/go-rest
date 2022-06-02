@@ -1,6 +1,17 @@
 package models
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
+
+type ServiceMeta struct {
+	Name        string
+	Uptime      time.Time
+	Environment string
+	Version     string
+}
 
 type Order struct {
 	ID            primitive.ObjectID `bson:"_id,omitempty" json:"order_id"`

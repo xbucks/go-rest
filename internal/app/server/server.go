@@ -4,20 +4,21 @@ import (
 	"sync"
 
 	"github.com/rameshsunkara/go-rest-api-example/internal/config"
+	"github.com/rameshsunkara/go-rest-api-example/internal/models"
 )
 
 var runOnce sync.Once
 
-func Init(environment string) {
+func Init(serviceInfo *models.ServiceMeta) {
 	config := config.GetConfig()
 	port := config.GetString("server.port")
 	runOnce.Do(func() {
-		startServer(port, environment)
+		startServer(port, serviceInfo)
 	})
 
 }
 
-func startServer(port string, environment string) {
-	r := NewRouter(environment)
+func startServer(port string, serviceInfo *models.ServiceMeta) {
+	r := NewRouter(serviceInfo)
 	r.Run(":" + port)
 }
