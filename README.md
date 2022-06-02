@@ -1,4 +1,6 @@
+[Build Status](https://github.com/rameshsunkara/go-rest-api-example/blob/main/.github/workflows/makefile.yml/badge.svg)
 [![Go Report Card](https://goreportcard.com/badge/github.com/rameshsunkara/go-rest-api-example)](https://goreportcard.com/report/github.com/rameshsunkara/go-rest-api-example)
+(https://www.tickgit.com/browse?repo=github.com/rameshsunkara/go-rest-api-example)
 
 # REST API microservice in golang
 
