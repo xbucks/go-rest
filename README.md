@@ -1,4 +1,4 @@
-[Build Status](https://github.com/rameshsunkara/go-rest-api-example/blob/main/.github/workflows/makefile.yml/badge.svg)
+[![Build Status](https://github.com/rameshsunkara/go-rest-api-example/actions/workflows/makefile.yml/badge.svg)](https://github.com/rameshsunkara/go-rest-api-example/actions?query=branch%3Amain)
 [![Go Report Card](https://goreportcard.com/badge/github.com/rameshsunkara/go-rest-api-example)](https://goreportcard.com/report/github.com/rameshsunkara/go-rest-api-example)
 (https://www.tickgit.com/browse?repo=github.com/rameshsunkara/go-rest-api-example)
 
