@@ -1,3 +1,5 @@
+[![Go Report Card](https://goreportcard.com/badge/github.com/rameshsunkara/go-rest-api-example)](https://goreportcard.com/report/github.com/rameshsunkara/go-rest-api-example)
+
 # REST API microservice in golang
 
 ## Why?
