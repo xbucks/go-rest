@@ -1,9 +1,8 @@
 package config
 
 import (
-	"github.com/rameshsunkara/go-rest-api-example/pkg/log"
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
-	"go.uber.org/zap"
 )
 
 var config *viper.Viper
@@ -18,7 +17,7 @@ func LoadConfig(env string) {
 	config.AddConfigPath("config/")
 	err = config.ReadInConfig()
 	if err != nil {
-		log.Logger.Fatal("error occurred while parsing config file", zap.Error(err))
+		log.Fatal().Err(err).Msg("error occurred while reading config")
 	}
 }
 

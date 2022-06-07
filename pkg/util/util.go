@@ -13,11 +13,7 @@ func CurrentISOTime() string {
 	return FormatTimeToISO(time.Now().UTC())
 }
 
-func IsNotEmptyString(input string) bool {
-	return len(strings.TrimSpace(input)) != 0
-}
-
-// IsEmptyString - Check if the given string is empty or not
-func IsEmptyString(input string) bool {
-	return len(strings.TrimSpace(input)) == 0
+// IsDevMode - Checks if the given string denotes any of the development environment
+func IsDevMode(s string) bool {
+	return strings.Contains(s, "dev")
 }

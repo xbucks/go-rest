@@ -6,9 +6,9 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-type ServiceMeta struct {
+type ServiceInfo struct {
 	Name        string
-	Uptime      time.Time
+	UpTime      time.Time
 	Environment string
 	Version     string
 }

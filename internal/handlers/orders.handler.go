@@ -1,17 +1,26 @@
-package controllers
+package handlers
 
 import (
 	"net/http"
 
+	"github.com/gin-gonic/gin"
 	"github.com/rameshsunkara/go-rest-api-example/internal/db"
 	"github.com/rameshsunkara/go-rest-api-example/internal/models"
-	"github.com/rameshsunkara/go-rest-api-example/pkg/log"
-
-	"github.com/gin-gonic/gin"
 )
 
-type OrdersController struct {
-	DBService db.OrdersCrudService
+const (
+	OrderIdPath = "id" // Request path variable
+)
+
+type OrdersHandler struct {
+	dataSvc db.DataService
+}
+
+func NewOrdersHandler(database db.MongoDBDatabase) *OrdersHandler {
+	ic := &OrdersHandler{
+		dataSvc: db.NewIssueDataService(database),
+	}
+	return ic
 }
 
 // Post  godoc
@@ -22,7 +31,7 @@ type OrdersController struct {
 // @Produce      json
 // @Success      200
 // @Router       /orders/ [post]
-func (ordersController *OrdersController) Post(c *gin.Context) {
+func (oHandler *OrdersHandler) Post(c *gin.Context) {
 	purchaseRequest := models.Order{}
 
 	if err := c.BindJSON(&purchaseRequest); err != nil {
@@ -31,12 +40,12 @@ func (ordersController *OrdersController) Post(c *gin.Context) {
 	}
 
 	if purchaseRequest.ID.IsZero() {
-		if uid, _ := ordersController.DBService.CreateOrder(&purchaseRequest); uid != nil {
+		if uid, _ := oHandler.dataSvc.Create(&purchaseRequest); uid != nil {
 			c.JSON(http.StatusOK, uid)
 			return
 		}
 	} else {
-		if updatedCount, _ := ordersController.DBService.UpdateOrder(&purchaseRequest); updatedCount != 0 {
+		if updatedCount, _ := oHandler.dataSvc.Update(&purchaseRequest); updatedCount != 0 {
 			c.JSON(http.StatusOK, updatedCount)
 			return
 		}
@@ -53,9 +62,8 @@ func (ordersController *OrdersController) Post(c *gin.Context) {
 // @Produce      json
 // @Success      200
 // @Router       /orders/ [get]
-func (ordersController *OrdersController) GetAll(c *gin.Context) {
-	log.Logger.Debug("fetch all documents of purchase orders")
-	orders, err := ordersController.DBService.GetAllOrders()
+func (oHandler *OrdersHandler) GetAll(c *gin.Context) {
+	orders, err := oHandler.dataSvc.GetAll()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Error occurred while retrieved purchase orders", "error": err})
 		c.Abort()
@@ -74,9 +82,10 @@ func (ordersController *OrdersController) GetAll(c *gin.Context) {
 // @Success      200
 // @Failure      500            {string}  string  "bad request"
 // @Router       /orders/{id} [get]
-func (ordersController *OrdersController) GetById(c *gin.Context) {
-	if c.Param("id") != "" {
-		order, err := ordersController.DBService.GetOrderByID(c.Param("id"))
+func (oHandler *OrdersHandler) GetById(c *gin.Context) {
+	id := c.Param(OrderIdPath)
+	if id != "" {
+		order, err := oHandler.dataSvc.GetById(id)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"message": "Error to retrieve order details", "error": err.Error()})
 			c.Abort()
@@ -100,9 +109,10 @@ func (ordersController *OrdersController) GetById(c *gin.Context) {
 // @Success      200
 // @Failure      500            {string}  string  "bad request"
 // @Router       /orders/{id} [delete]
-func (ordersController *OrdersController) DeleteById(c *gin.Context) {
-	if c.Param("id") != "" {
-		count, err := ordersController.DBService.DeleteOrderByID(c.Param("id"))
+func (oHandler *OrdersHandler) DeleteById(c *gin.Context) {
+	id := c.Param(OrderIdPath)
+	if id != "" {
+		count, err := oHandler.dataSvc.DeleteById(id)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"message": "Error to retrieve order details", "error": err.Error()})
 			c.Abort()

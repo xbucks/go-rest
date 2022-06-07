@@ -1,4 +1,4 @@
-package controllers
+package handlers
 
 import (
 	"math/rand"
@@ -16,7 +16,7 @@ const (
 )
 
 type SeedDBController struct {
-	DBService db.OrdersCrudService
+	DBService db.OrdersDataService
 }
 
 func (seedController *SeedDBController) SeedDB(c *gin.Context) {
@@ -39,7 +39,7 @@ func (seedController *SeedDBController) SeedDB(c *gin.Context) {
 		po := &models.Order{
 			Products: product,
 		}
-		_, err := seedController.DBService.CreateOrder(po)
+		_, err := seedController.DBService.Create(po)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"message": "Unable inserted data",

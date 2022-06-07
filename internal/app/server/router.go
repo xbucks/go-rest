@@ -1,40 +1,39 @@
 package server
 
 import (
-	"strings"
-	"time"
-
-	"github.com/rameshsunkara/go-rest-api-example/internal/controllers"
-	"github.com/rameshsunkara/go-rest-api-example/internal/models"
-	"github.com/rameshsunkara/go-rest-api-example/pkg/log"
-
+	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
+	"github.com/rameshsunkara/go-rest-api-example/internal/db"
+	"github.com/rameshsunkara/go-rest-api-example/internal/handlers"
+	"github.com/rameshsunkara/go-rest-api-example/internal/models"
+	"github.com/rameshsunkara/go-rest-api-example/pkg/util"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-func NewRouter(serviceInfo *models.ServiceMeta) *gin.Engine {
-	if strings.Contains(serviceInfo.Environment, "dev") {
-		gin.SetMode(gin.DebugMode)
-	} else {
-		gin.SetMode(gin.ReleaseMode)
+func WebRouter(svcInfo *models.ServiceInfo, client handlers.MongoDBClient, db db.MongoDBDatabase) (router *gin.Engine) {
+	ginMode := gin.ReleaseMode
+	if util.IsDevMode(svcInfo.Environment) {
+		ginMode = gin.DebugMode
+		gin.ForceConsoleColor()
 	}
+	gin.SetMode(ginMode)
 
 	// Middleware
-	router := gin.New()
-	router.Use(log.Ginzap(log.Logger, time.RFC3339, true))
-	router.Use(log.RecoveryWithZap(log.Logger, true))
+	router = gin.Default()
+	pprof.Register(router) // TODO: Add debug routes only for Admins /debug/*
+	// TODO: Enforce there is authorization information with applicable requests
+	// TODO: log everything from gin in json
 
 	// Routes
 
-	// Routes - Health Check
-	health := controllers.NewHealthController(serviceInfo)
-	router.GET("/health", health.Status) // /health
+	// Routes - Status Check
+	status := handlers.NewStatusHandler(svcInfo, client)
+	router.GET("/status", status.CheckStatus) // /status
 
 	// Seed DB
-	if serviceInfo.Environment == "dev" {
-		seed := new(controllers.SeedDBController)
-		seed.DBService.Prepare("ecommerce", "purchaseorders")
+	if util.IsDevMode(svcInfo.Environment) {
+		seed := new(handlers.SeedDBController)
 		router.POST("/seedDB", seed.SeedDB)
 	}
 
@@ -43,8 +42,7 @@ func NewRouter(serviceInfo *models.ServiceMeta) *gin.Engine {
 	{
 		ordersGroup := v1.Group("orders")
 		{
-			orders := new(controllers.OrdersController)
-			orders.DBService.Prepare("ecommerce", "purchaseorders")
+			orders := handlers.NewOrdersHandler(db)
 			ordersGroup.GET("/", orders.GetAll)           // api/v1/orders
 			ordersGroup.GET("/:id", orders.GetById)       // api/v1/orders/{id}
 			ordersGroup.POST("/", orders.Post)            // api/v1/orders
@@ -56,5 +54,5 @@ func NewRouter(serviceInfo *models.ServiceMeta) *gin.Engine {
 	// Routes - Swagger
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	return router
+	return
 }

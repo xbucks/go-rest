@@ -2,6 +2,10 @@ tmp/
 *.log
 *.pid
 go-rest-api-example
+coverage.out
+coverage.html
+coverage.txt
+
 
 # Created by https://www.toptal.com/developers/gitignore/api/go,intellij+iml,vs
 # Edit at https://www.toptal.com/developers/gitignore?templates=go,intellij+iml,vs
