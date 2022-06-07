@@ -12,15 +12,22 @@ import (
 )
 
 const (
-	SEED_RECORD_COUNT = 50
+	SeedRecordCount = 500
 )
 
-type SeedDBController struct {
-	DBService db.OrdersDataService
+type SeedHandler struct {
+	dataSvc db.DataService
 }
 
-func (seedController *SeedDBController) SeedDB(c *gin.Context) {
-	for i := 0; i < SEED_RECORD_COUNT; i++ {
+func NewSeedHandler(database db.MongoDBDatabase) *SeedHandler {
+	ic := &SeedHandler{
+		dataSvc: db.NewOrderDataService(database),
+	}
+	return ic
+}
+
+func (sHandler *SeedHandler) SeedDB(c *gin.Context) {
+	for i := 0; i < SeedRecordCount; i++ {
 		product := []models.Product{
 			{
 				Name:      faker.Name(),
@@ -39,7 +46,7 @@ func (seedController *SeedDBController) SeedDB(c *gin.Context) {
 		po := &models.Order{
 			Products: product,
 		}
-		_, err := seedController.DBService.Create(po)
+		_, err := sHandler.dataSvc.Create(po)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"message": "Unable inserted data",
@@ -50,6 +57,6 @@ func (seedController *SeedDBController) SeedDB(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Successfully inserted fake data",
-		"Count":   SEED_RECORD_COUNT,
+		"Count":   SeedRecordCount,
 	})
 }

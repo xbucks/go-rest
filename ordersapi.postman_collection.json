@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "4513b26b-eb10-4cca-886a-7704799f9a51",
-		"name": "Orders",
+		"name": "ordersapi",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "1129965"
 	},
@@ -12,13 +12,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{host}}:{{port}}/health",
+					"raw": "{{host}}:{{port}}/status",
 					"host": [
 						"{{host}}"
 					],
 					"port": "{{port}}",
 					"path": [
-						"health"
+						"status"
 					]
 				}
 			},
@@ -50,7 +50,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{host}}:{{port}}/api/v1/orders/628c556112951bff10538abc",
+					"raw": "{{host}}:{{port}}/api/v1/orders/629536b3fac02728de50c042",
 					"host": [
 						"{{host}}"
 					],
@@ -59,7 +59,7 @@
 						"api",
 						"v1",
 						"orders",
-						"628c556112951bff10538abc"
+						"629536b3fac02728de50c042"
 					]
 				}
 			},

@@ -36,7 +36,7 @@ type OrdersDataService struct {
 	collection *mongo.Collection
 }
 
-func NewIssueDataService(db MongoDBDatabase) *OrdersDataService {
+func NewOrderDataService(db MongoDBDatabase) *OrdersDataService {
 	iDBSvc := &OrdersDataService{
 		collection: db.Collection(OrdersCollection),
 	}
@@ -82,12 +82,12 @@ func (ordDataSvc *OrdersDataService) Update(purchaseOrder *models.Order) (int64,
 	}
 
 	if result.MatchedCount != 0 {
-		log.Info().Str("OrderId", result.UpsertedID.(string)).Msg("matched and replaced an existing document")
+		log.Info().Msg("matched and replaced an existing document")
 		return result.MatchedCount, nil
 	}
 
 	if result.UpsertedCount != 0 {
-		log.Info().Str("OrderId", result.UpsertedID.(string)).Msg("inserted a new order with ID")
+		log.Info().Msg("inserted a new order with ID")
 		return result.MatchedCount, nil
 	}
 

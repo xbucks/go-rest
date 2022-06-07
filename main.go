@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"github.com/rameshsunkara/go-rest-api-example/internal/server"
 	"github.com/rameshsunkara/go-rest-api-example/pkg/util"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/pkgerrors"
@@ -9,7 +10,6 @@ import (
 	"time"
 
 	_ "github.com/rameshsunkara/go-rest-api-example/docs"
-	"github.com/rameshsunkara/go-rest-api-example/internal/app/server"
 	"github.com/rameshsunkara/go-rest-api-example/internal/config"
 	"github.com/rameshsunkara/go-rest-api-example/internal/db"
 	"github.com/rameshsunkara/go-rest-api-example/internal/models"

@@ -33,8 +33,8 @@ func WebRouter(svcInfo *models.ServiceInfo, client handlers.MongoDBClient, db db
 
 	// Seed DB
 	if util.IsDevMode(svcInfo.Environment) {
-		seed := new(handlers.SeedDBController)
-		router.POST("/seedDB", seed.SeedDB)
+		seed := handlers.NewSeedHandler(db)
+		router.POST("/seedDB", seed.SeedDB) // /seedDB
 	}
 
 	// Routes - API
@@ -43,11 +43,11 @@ func WebRouter(svcInfo *models.ServiceInfo, client handlers.MongoDBClient, db db
 		ordersGroup := v1.Group("orders")
 		{
 			orders := handlers.NewOrdersHandler(db)
-			ordersGroup.GET("/", orders.GetAll)           // api/v1/orders
-			ordersGroup.GET("/:id", orders.GetById)       // api/v1/orders/{id}
-			ordersGroup.POST("/", orders.Post)            // api/v1/orders
-			ordersGroup.PUT("/", orders.Post)             // api/v1/orders
-			ordersGroup.DELETE("/:id", orders.DeleteById) // api/v1/orders/{id}
+			ordersGroup.GET("", orders.GetAll)            // api/v1/orders
+			ordersGroup.GET("/:id", orders.GetById)       // api/v1/orders/:id
+			ordersGroup.POST("", orders.Post)             // api/v1/orders
+			ordersGroup.PUT("", orders.Post)              // api/v1/orders
+			ordersGroup.DELETE("/:id", orders.DeleteById) // api/v1/orders/:id
 		}
 	}
 

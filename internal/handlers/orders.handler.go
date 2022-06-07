@@ -18,7 +18,7 @@ type OrdersHandler struct {
 
 func NewOrdersHandler(database db.MongoDBDatabase) *OrdersHandler {
 	ic := &OrdersHandler{
-		dataSvc: db.NewIssueDataService(database),
+		dataSvc: db.NewOrderDataService(database),
 	}
 	return ic
 }
