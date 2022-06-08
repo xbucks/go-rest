@@ -73,7 +73,7 @@ Choose a command to run in go-rest-api-example:
 ### Tools
 
 1. Routing - [Gin](https://github.com/gin-gonic/gin)
-2. Logging - [Zap](https://github.com/uber-go/zap)
+2. Logging - [zerolog](https://github.com/rs/zerolog)
 3. Configuration - [Viper](https://github.com/spf13/viper)
 4. Database - [Mongo](https://www.mongodb.com/)
 5. Container - [Docker](https://www.docker.com/)

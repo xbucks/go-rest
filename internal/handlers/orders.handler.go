@@ -69,7 +69,7 @@ func (oHandler *OrdersHandler) GetAll(c *gin.Context) {
 		c.Abort()
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"orders": orders})
+	c.JSON(http.StatusOK, orders)
 }
 
 // GetById  godoc
@@ -91,7 +91,7 @@ func (oHandler *OrdersHandler) GetById(c *gin.Context) {
 			c.Abort()
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"Order": order})
+		c.JSON(http.StatusOK, order)
 		return
 	}
 	c.JSON(http.StatusBadRequest, gin.H{"message": "bad request"})
@@ -118,7 +118,7 @@ func (oHandler *OrdersHandler) DeleteById(c *gin.Context) {
 			c.Abort()
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"DeletedCount": count})
+		c.JSON(http.StatusOK, count)
 		return
 	}
 	c.JSON(http.StatusBadRequest, gin.H{"message": "bad request"})
