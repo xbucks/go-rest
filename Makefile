@@ -109,10 +109,9 @@ api-docs:
 test:
 	go test -v ./...
 
-## coverage: Measures code coverage and generates HTML report
+## coverage: Measures code coverage
 coverage:
-	go test -cover -v -coverprofile=coverage.out ./...
-	go tool cover -html=coverage.out -o coverage.html
+	go test -race -coverprofile=coverage.out -covermode=atomic ./...
 
 .PHONY: help
 help: Makefile
