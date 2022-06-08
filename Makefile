@@ -56,7 +56,7 @@ build:
 ## build-docker: Build the API server as a docker image
 build-docker:
 	$(info ---> Building Docker Image: ${DOCKER_IMAGE_NAME}, Exposed PORT: ${PORT})
-	docker build -f Dockerfile -t ${DOCKER_IMAGE_NAME} . --build-arg PORT=${PORT}
+	docker build -f Dockerfile -t ${DOCKER_IMAGE_NAME} . --build-arg port=${PORT} --build-arg version=${VERSION}
 
 ## run-docker: Run the API server as a docker container
 run-docker:
@@ -104,6 +104,15 @@ api-docs:
 		-H "accept: application/json" \
 		-H "Content-Type: application/json" \
 		-d @docs/swagger.json > docs/openapi.json
+
+## test: Run tests
+test:
+	go test -v ./...
+
+## coverage: Measures code coverage and generates HTML report
+coverage:
+	go test -cover -v -coverprofile=coverage.out ./...
+	go tool cover -html=coverage.out -o coverage.html
 
 .PHONY: help
 help: Makefile

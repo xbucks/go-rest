@@ -2,6 +2,9 @@ package db
 
 import (
 	"context"
+	"github.com/bxcodec/faker/v3"
+	"github.com/rameshsunkara/go-rest-api-example/internal/models"
+	"math/rand"
 	"os"
 	"testing"
 	"time"
@@ -37,25 +40,43 @@ func TestMain(m *testing.M) {
 	}
 	TestDataBase = client.Database(strikememongo.RandomDatabase())
 	OverrideDBSetup(client, TestDataBase)
-	// insertTestData()
+	insertTestData()
 
 	os.Exit(m.Run())
 }
 
-/*
 func insertTestData() {
-	data, _ := ioutil.ReadFile("../mockdata/issues_response.json")
-	issues, _ := util.UnMarshalIssuesResponse(data)
 	db, err := GetDB()
 	if err != nil {
 		log.Panic().Err(err).Msg("database is not initialized")
 	}
 	dSvc := NewOrderDataService(db)
-	for _, m := range *issues {
-		_, _ = dSvc.CreateOne(&m)
+
+	for i := 0; i < 500; i++ {
+		product := []models.Product{
+			{
+				Name:      faker.Name(),
+				Price:     (uint)(rand.Intn(90) + 10),
+				Remarks:   faker.Sentence(),
+				UpdatedAt: faker.TimeString(),
+			},
+			{
+				Name:      faker.Name(),
+				Price:     (uint)(rand.Intn(1000) + 10),
+				Remarks:   faker.Sentence(),
+				UpdatedAt: faker.TimeString(),
+			},
+		}
+
+		po := &models.Order{
+			Products: product,
+		}
+		_, err := dSvc.Create(po)
+		if err != nil {
+			log.Fatal().Err(err).Msg("unable to insert data")
+		}
 	}
 }
-*/
 
 func TestDBSuccess(t *testing.T) {
 	db, err := GetDB()

@@ -15,9 +15,10 @@ RUN make build
 
 FROM scratch
 WORKDIR /app/
-ARG PORT
+ARG port
+ARG version
 COPY --from=build /app/go-rest-api-example .
 COPY --from=build /app/config/*.yaml /app/config/
-CMD ["./go-rest-api-example"]
-EXPOSE $PORT
+CMD ["./go-rest-api-example", "-version=${version}"]
+EXPOSE $port
 

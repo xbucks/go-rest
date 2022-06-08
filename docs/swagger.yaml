@@ -7,26 +7,6 @@ info:
   title: GO Rest Example API Service (Purchase Order Tracker)
   version: "1.0"
 paths:
-  /health:
-    get:
-      consumes:
-      - application/json
-      description: Provides the current status/health of the service. It checks the
-        health of all the critical components of the service.
-      produces:
-      - text/plain
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
-        "503":
-          description: Something is wrong
-          schema:
-            type: string
-      summary: Status/Health of the service (Doesn't work in Swagger UI)
-      tags:
-      - Status
   /orders/:
     get:
       consumes:

@@ -32,10 +32,9 @@ Pre-requisites:
 
 2. Visit Swagger API in browser
 
-        http://localhost:8080
+        open http://localhost:8080/swagger/index.html
 
-   If you are a fan of Postman, import the included [Postman collection](Orders.postman_collection.json) which is actually a better option as DB is not
-   seeded yet.
+   If you are a fan of Postman, import the included [Postman collection](orders.postman_collection.json)
 
 ### QuickStart - Develop
 
@@ -69,6 +68,8 @@ Choose a command to run in go-rest-api-example:
       lint                                       Runs golint on all Go packages (TODO)
       fmt                                        Run format "go fmt" on all Go packages
       api-docs                                   Generate OpenAPI3 Spec
+      test                                       Run tests
+      coverage                                   Measures code coverage and generates HTML report
 
 ### Tools
 
@@ -93,9 +94,8 @@ Choose a command to run in go-rest-api-example:
 - [ ] Add more and clear documentation about the features this offers and how to replace tools
 - [ ] Automate Open API3 Spec Generation completely
 - [ ] Seed local DB through docker and add DB Migration Support
-- [ ] Add more unit tests
 - [ ] Add more profiles and obey all [12-Factor App rules](https://12factor.net/ru/)
-- [ ] Add CI/CD tooling & Necessary Github hooks
+- [ ] Add CI/CD tooling
 - [ ] Add missing references/inspirations
 - [ ] Improvements to the api in terms of error handling, proper messaging etc., ( that wasn't focus)
 - [ ] API Documentation - Lot of potential to improve
