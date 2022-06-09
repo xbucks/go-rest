@@ -36,7 +36,8 @@ func newConnection(connectionUrl string, dbName string) {
 		log.Fatal().Err(err).Msg("Connection Failed to Database")
 	}
 
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
 	connErr := client.Connect(ctx)
 	if connErr != nil {
 		log.Fatal().Err(connErr).Msg("Connection Failed to Database")

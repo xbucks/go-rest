@@ -12,6 +12,7 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
+	"github.com/rameshsunkara/go-rest-api-example/internal/db"
 	"github.com/rameshsunkara/go-rest-api-example/internal/models"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -33,7 +34,9 @@ var (
 	getAllFunc        func() (*[]models.Order, error)
 	getByIdFunc       func(id string) (*models.Order, error)
 	getDeleteByIdFunc func(id string) (int64, error)
-	ic                = NewOrdersHandler(&MockMongoDataBase{})
+	ic                = &OrdersHandler{
+		dataSvc: &MockDataService{},
+	}
 )
 
 func (m *MockDataService) Create(purchaseOrder *models.Order) (*mongo.InsertOneResult, error) {
@@ -84,6 +87,13 @@ func UnMarshalCreateOrderResponse(d []byte) (*mongo.InsertOneResult, error) {
 	}
 
 	return r, nil
+}
+
+func TestNewOrdersHandler(t *testing.T) {
+	ohandler := NewOrdersHandler(&MockMongoDataBase{})
+
+	assert.IsType(t, &OrdersHandler{}, ohandler)
+	assert.IsType(t, &db.OrdersDataService{}, ohandler.dataSvc)
 }
 
 func TestCreateOrderSuccess(t *testing.T) {
