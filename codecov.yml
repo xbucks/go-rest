@@ -27,8 +27,8 @@ coverage:
         - ^pkg/util.*
         target: auto
         threshold: 5.0
-    ignore:
-      - ^docs.*"
+        ignore:
+        - ^docs.*"
 
 
 github_checks:
