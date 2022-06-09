@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestFormatTimeToISO(t *testing.T) {
@@ -13,6 +15,19 @@ func TestFormatTimeToISO(t *testing.T) {
 	if want != got {
 		t.Errorf("Expected '%s', but got '%s'", want, got)
 	}
+}
+
+func TestCurrentISOTime(t *testing.T) {
+	got := CurrentISOTime()
+	parsedTime, err := time.Parse(time.RFC3339, got)
+	z, offset := parsedTime.Zone()
+
+	if err != nil {
+		t.Error("Recieved time string is not good format")
+	}
+	assert.Equal(t, "UTC", z)
+	assert.Equal(t, 0, offset)
+
 }
 
 type DevModeTestCase struct {
