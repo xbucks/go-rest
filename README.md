@@ -17,9 +17,9 @@ There are many open source boilerplate repos but why I did this ?
    probably borrowed
    ideas from them. (my apologies if I failed to miss any of them in the references)
 
-2. I want to pick the tools for Routing, Logging, Configuration Management etc., to my liking and preferences.
+2. I wanted to pick the tools for Routing, Logging, Configuration Management etc., to my liking and preferences.
 
-3. I want a version which I have full control to change/update based on my professional work requirements.
+3. I wanted a version which I have full control to change/update based on my professional work requirements.
 
 ### QuickStart
 
