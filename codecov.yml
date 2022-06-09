@@ -28,7 +28,7 @@ coverage:
         target: auto
         threshold: 5.0
     ignore:
-      - "docs/**/*"
+      - ^docs.*"
 
 
 github_checks:
