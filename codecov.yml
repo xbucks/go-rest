@@ -28,9 +28,8 @@ coverage:
         target: auto
         threshold: 5.0
     ignore:
-      - "docs"
-      - "config"
-      - "tmp"
+      - "docs/**/*"
+
 
 github_checks:
   annotations: true
