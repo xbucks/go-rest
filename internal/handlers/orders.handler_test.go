@@ -3,20 +3,29 @@ package handlers
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/gin-gonic/gin"
-	"github.com/rameshsunkara/go-rest-api-example/internal/models"
-	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
+	"errors"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"strconv"
 	"testing"
+
+	"github.com/gin-gonic/gin"
+	"github.com/rameshsunkara/go-rest-api-example/internal/models"
+	"github.com/stretchr/testify/assert"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type MockDataService struct{}
+
+type MockMongoDataBase struct{}
+
+func (m *MockMongoDataBase) Collection(name string, opts ...*options.CollectionOptions) *mongo.Collection {
+	return nil
+}
 
 var (
 	getCreateFunc     func(purchaseOrder *models.Order) (*mongo.InsertOneResult, error)
@@ -24,9 +33,7 @@ var (
 	getAllFunc        func() (*[]models.Order, error)
 	getByIdFunc       func(id string) (*models.Order, error)
 	getDeleteByIdFunc func(id string) (int64, error)
-	ic                = &OrdersHandler{
-		dataSvc: &MockDataService{},
-	}
+	ic                = NewOrdersHandler(&MockMongoDataBase{})
 )
 
 func (m *MockDataService) Create(purchaseOrder *models.Order) (*mongo.InsertOneResult, error) {
@@ -110,6 +117,51 @@ func TestCreateOrderSuccess(t *testing.T) {
 	respOrder, _ := UnMarshalCreateOrderResponse(respBody)
 	assert.EqualValues(t, http.StatusOK, resp.StatusCode)
 	assert.EqualValues(t, respOrder.InsertedID, "629fd50cb1e95cbe7ac12aae")
+}
+
+func TestCreateOrderFailure_DBError(t *testing.T) {
+	// Test Setup
+	gin.SetMode(gin.TestMode)
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+	order, _ := json.Marshal(models.Order{
+		Products: []models.Product{{
+			Name:  "test-prod",
+			Price: 100,
+		}},
+	})
+	body := bytes.NewReader(order)
+	c.Request, _ = http.NewRequest("POST", "/api/v1/orders", body)
+	getCreateFunc = func(*models.Order) (*mongo.InsertOneResult, error) {
+		return nil, errors.New("db error")
+	}
+
+	// Call actual function
+	ic.Post(c)
+
+	// Check results
+	resp := w.Result()
+	assert.EqualValues(t, http.StatusInternalServerError, resp.StatusCode)
+}
+
+func TestCreateOrderFailure_BadRequest(t *testing.T) {
+	// Test Setup
+	gin.SetMode(gin.TestMode)
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+	order, _ := json.Marshal("Bad Request")
+	body := bytes.NewReader(order)
+	c.Request, _ = http.NewRequest("POST", "/api/v1/orders", body)
+	getCreateFunc = func(*models.Order) (*mongo.InsertOneResult, error) {
+		return nil, nil
+	}
+
+	// Call actual function
+	ic.Post(c)
+
+	// Check results
+	resp := w.Result()
+	assert.EqualValues(t, http.StatusBadRequest, resp.StatusCode)
 }
 
 func TestUpdateOrderSuccess(t *testing.T) {
@@ -276,4 +328,42 @@ func TestDeleteOrderSuccess(t *testing.T) {
 	result, _ := strconv.Atoi(string(respBody))
 	assert.EqualValues(t, http.StatusOK, resp.StatusCode)
 	assert.EqualValues(t, result, 1)
+}
+
+func TestDeleteOrderFailure_DBError(t *testing.T) {
+	// Test Setup
+	gin.SetMode(gin.TestMode)
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+	const id = "629536b3fac02728de50c042"
+	c.Params = []gin.Param{{Key: "id", Value: id}}
+	getDeleteByIdFunc = func(id string) (int64, error) {
+		return 1, errors.New("db error")
+	}
+
+	// Call actual function
+	ic.DeleteById(c)
+
+	// Check results
+	resp := w.Result()
+	assert.EqualValues(t, http.StatusInternalServerError, resp.StatusCode)
+}
+
+func TestDeleteOrderFailure_BadRequest(t *testing.T) {
+	// Test Setup
+	gin.SetMode(gin.TestMode)
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+	const id = ""
+	c.Params = []gin.Param{{Key: "id", Value: id}}
+	getDeleteByIdFunc = func(id string) (int64, error) {
+		return 0, nil
+	}
+
+	// Call actual function
+	ic.DeleteById(c)
+
+	// Check results
+	resp := w.Result()
+	assert.EqualValues(t, http.StatusBadRequest, resp.StatusCode)
 }
