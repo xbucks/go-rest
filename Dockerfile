@@ -16,9 +16,8 @@ RUN make build
 FROM scratch
 WORKDIR /app/
 ARG port
-ARG version
 COPY --from=builder /usr/src/app/app .
 COPY --from=builder /usr/src/app/config/*.yaml /app/config/
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-CMD ["./app", "-version=${version}"]
+ENTRYPOINT ["./app"]
 EXPOSE $port

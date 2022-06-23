@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"os"
 	"time"
 
@@ -22,6 +21,8 @@ const (
 	DBName      = "ecommerce"
 )
 
+var version string
+
 // @title           GO Rest Example API Service (Purchase Order Tracker)
 // @version         1.0
 // @description     A sample service to demonstrate how to develop REST API in golang
@@ -35,10 +36,6 @@ const (
 func main() {
 	upTime := time.Now()
 
-	// Parse command line flags
-	v := flag.String("version", "0.0", "current version of this service")
-	flag.Parse()
-
 	env := os.Getenv("environment")
 	if env == "" {
 		env = "dev"
@@ -49,7 +46,7 @@ func main() {
 		Name:        ServiceName,
 		UpTime:      upTime,
 		Environment: env,
-		Version:     *v,
+		Version:     version,
 	}
 
 	// Setup : Log

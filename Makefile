@@ -1,6 +1,8 @@
 -include .env
 
 PROJECT_NAME := $(shell basename "$(PWD)")
+
+# GIT commit id will be used as version
 VERSION ?= $(shell git rev-parse --short HEAD)
 
 DOCKER_IMAGE_NAME := "$(PROJECT_NAME):$(VERSION)"
@@ -9,7 +11,7 @@ DOCKER_CONTAINER_NAME := "$(PROJECT_NAME)-$(VERSION)"
 MODULE = $(shell go list -m)
 
 PACKAGES := $(shell go list ./... | grep -v /vendor/)
-LDFLAGS := -ldflags "-X main.Version=${VERSION}"
+LDFLAGS := -ldflags "-X main.version=${VERSION}"
 
 CONFIG_FILE ?= ./config/dev.yaml
 
@@ -56,15 +58,14 @@ build:
 
 ## docker-build: Build the API server as a docker image
 docker-build:
-	$(info ---> Building Docker Image: ${DOCKER_IMAGE_NAME}, Exposed Port: ${port}, Version: ${VERSION})
+	$(info ---> Building Docker Image: ${DOCKER_IMAGE_NAME}, Exposed Port: ${port})
 	docker build -t ${DOCKER_IMAGE_NAME} . \
 		--build-arg port=${port} \
-		--build-arg version=${VERSION}
 
 ## docker-run: Run the API server as a docker container
 docker-run:
 	$(info ---> Running Docker Container: ${DOCKER_CONTAINER_NAME} in Environment: ${profile})
-	docker run -d --name ${DOCKER_CONTAINER_NAME} -it \
+	docker run --name ${DOCKER_CONTAINER_NAME} -it \
 				--env environment=${profile} \
 				$(DOCKER_IMAGE_NAME)
 
