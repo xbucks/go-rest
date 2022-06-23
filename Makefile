@@ -30,7 +30,8 @@ develop:
 
 ## run: Run the API server alone in normal mode (without supplemantary services such as DB etc.,)
 run:
-	go run ${LDFLAGS} main.go -environment="${environment}" -version="${VERSION}" & echo $$! >> $(PID_FILE)
+	@export environment=$(profile)
+	go run ${LDFLAGS} main.go -version="${VERSION}" & echo $$! >> $(PID_FILE)
 
 ## restart: Restarts the API server
 restart:
@@ -53,15 +54,19 @@ stop:
 build:
 	CGO_ENABLED=0 go build ${LDFLAGS} -a -o ${PROJECT_NAME} $(MODULE)
 
-## build-docker: Build the API server as a docker image
-build-docker:
-	$(info ---> Building Docker Image: ${DOCKER_IMAGE_NAME}, Exposed PORT: ${PORT})
-	docker build -f Dockerfile -t ${DOCKER_IMAGE_NAME} . --build-arg port=${PORT} --build-arg version=${VERSION}
+## docker-build: Build the API server as a docker image
+docker-build:
+	$(info ---> Building Docker Image: ${DOCKER_IMAGE_NAME}, Exposed Port: ${port}, Version: ${VERSION})
+	docker build -t ${DOCKER_IMAGE_NAME} . \
+		--build-arg port=${port} \
+		--build-arg version=${VERSION}
 
-## run-docker: Run the API server as a docker container
-run-docker:
-	$(info ---> Running Docker Container: ${DOCKER_CONTAINER_NAME})
-	docker run -d --name  ${DOCKER_CONTAINER_NAME} -it -p $(PORT):$(PORT) "$(DOCKER_IMAGE_NAME)"
+## docker-run: Run the API server as a docker container
+docker-run:
+	$(info ---> Running Docker Container: ${DOCKER_CONTAINER_NAME} in Environment: ${profile})
+	docker run -d --name ${DOCKER_CONTAINER_NAME} -it \
+				--env environment=${profile} \
+				$(DOCKER_IMAGE_NAME)
 
 ## docker-start: Builts Docker image and runs it.
 docker-start: build-docker run-docker

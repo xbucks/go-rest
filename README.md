@@ -57,8 +57,8 @@ Choose a command to run in go-rest-api-example:
       restart                                    Restarts the API server
       run-live                                   Run the API server with live reload support (requires fswatch)
       build                                      Build the API server binary
-      build-docker                               Build the API server as a docker image
-      run-docker                                 Run the API server as a docker container
+      docker-build                               Build the API server as a docker image
+      docker-run                                 Run the API server as a docker container
       docker-start                               Builts Docker image and runs it.
       docker-stop                                Stops the docker container
       docker-remove                              Removes the docker images and containers   

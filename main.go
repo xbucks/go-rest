@@ -2,12 +2,13 @@ package main
 
 import (
 	"flag"
+	"os"
+	"time"
+
 	"github.com/rameshsunkara/go-rest-api-example/internal/server"
 	"github.com/rameshsunkara/go-rest-api-example/pkg/util"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/pkgerrors"
-	"os"
-	"time"
 
 	_ "github.com/rameshsunkara/go-rest-api-example/docs"
 	"github.com/rameshsunkara/go-rest-api-example/internal/config"
@@ -35,23 +36,31 @@ func main() {
 	upTime := time.Now()
 
 	// Parse command line flags
-	env := flag.String("environment", "dev", "environment where this service is running")
 	v := flag.String("version", "0.0", "current version of this service")
 	flag.Parse()
+
+	env := os.Getenv("environment")
+	if env == "" {
+		env = "dev"
+	}
 
 	// Metadata of the service
 	serviceInfo := &models.ServiceInfo{
 		Name:        ServiceName,
 		UpTime:      upTime,
-		Environment: *env,
+		Environment: env,
 		Version:     *v,
 	}
 
 	// Setup : Log
-	setupLog(*env)
+	setupLog(env)
+
+	log.Log().
+		Object("Service", serviceInfo).
+		Msg("starting")
 
 	// Load Configuration
-	config.LoadConfig(*env)
+	config.LoadConfig(env)
 
 	// Setup : DB
 	dbClient, database := db.Init(DBName)

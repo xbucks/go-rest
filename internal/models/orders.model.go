@@ -3,6 +3,7 @@ package models
 import (
 	"time"
 
+	"github.com/rs/zerolog"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -11,6 +12,13 @@ type ServiceInfo struct {
 	UpTime      time.Time
 	Environment string
 	Version     string
+}
+
+func (s ServiceInfo) MarshalZerologObject(e *zerolog.Event) {
+	e.Str("name", s.Name).
+		Str("environment", s.Environment).
+		Time("started", s.UpTime).
+		Str("version", s.Version)
 }
 
 type Order struct {

@@ -1,12 +1,12 @@
-FROM golang:latest AS build
 
+FROM golang:1.18 as builder
+LABEL stage=builder
+WORKDIR /usr/src/app
 
-WORKDIR /app
-
-# copy module files first so that they don't need to be downloaded again if no change
-COPY go.* ./
-RUN go mod download
-RUN go mod verify
+# pre-copy/cache go.mod for pre-downloading dependencies 
+# and only redownloading them in subsequent builds if they change
+COPY go.mod go.sum ./
+RUN go mod download && go mod verify
 
 # copy source files and build the binary
 COPY . .
@@ -17,8 +17,8 @@ FROM scratch
 WORKDIR /app/
 ARG port
 ARG version
-COPY --from=build /app/go-rest-api-example .
-COPY --from=build /app/config/*.yaml /app/config/
-CMD ["./go-rest-api-example", "-version=${version}"]
+COPY --from=builder /usr/src/app/app .
+COPY --from=builder /usr/src/app/config/*.yaml /app/config/
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+CMD ["./app", "-version=${version}"]
 EXPOSE $port
-
