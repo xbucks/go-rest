@@ -21,6 +21,7 @@ const (
 	DBName      = "ecommerce"
 )
 
+// Passed while building from  make file
 var version string
 
 // @title           GO Rest Example API Service (Purchase Order Tracker)
@@ -52,18 +53,22 @@ func main() {
 	// Setup : Log
 	setupLog(env)
 
-	log.Log().
-		Object("Service", serviceInfo).
-		Msg("starting")
+	log.Info().Object("Service", serviceInfo).Msg("starting")
 
 	// Load Configuration
-	config.LoadConfig(env)
+	c, cErr := config.LoadConfig(env)
+	if cErr != nil {
+		log.Fatal().Err(cErr).Msg("unable to read configuration")
+	}
 
 	// Setup : DB
-	dbClient, database := db.Init(DBName)
+	dbManager, dErr := db.Init(DBName, c.GetString("db.dsn"))
+	if dErr != nil {
+		log.Fatal().Err(dErr).Msg("unable to initialize DB connection")
+	}
 
 	// Setup : Server
-	server.Init(serviceInfo, dbClient, database)
+	server.Init(serviceInfo, dbManager)
 
 	log.Fatal().Str("ServiceName", ServiceName).Msg("Server Exited")
 }

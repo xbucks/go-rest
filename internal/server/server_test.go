@@ -1,18 +1,13 @@
 package server
 
 import (
-	"context"
+	"github.com/gin-gonic/gin"
+	"github.com/rameshsunkara/go-rest-api-example/internal/mocks"
+	"github.com/rameshsunkara/go-rest-api-example/internal/models"
+	"github.com/stretchr/testify/assert"
 	"net/http"
 	"testing"
 	"time"
-
-	"github.com/rameshsunkara/go-rest-api-example/internal/models"
-	"github.com/stretchr/testify/assert"
-
-	"github.com/gin-gonic/gin"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
-	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
 var (
@@ -24,20 +19,8 @@ var (
 	}
 )
 
-type MockMongoDBClient struct{}
-
-func (m *MockMongoDBClient) Ping(ctx context.Context, rp *readpref.ReadPref) error {
-	return nil
-}
-
-type MockMongoDataBase struct{}
-
-func (m *MockMongoDataBase) Collection(name string, opts ...*options.CollectionOptions) *mongo.Collection {
-	return nil
-}
-
 func TestListOfRoutes(t *testing.T) {
-	router := WebRouter(svcInfo, &MockMongoDBClient{}, &MockMongoDataBase{})
+	router := WebRouter(svcInfo, &mocks.MockDataMgr{})
 	list := router.Routes()
 	mode := gin.Mode()
 
@@ -82,7 +65,7 @@ func TestListOfRoutes(t *testing.T) {
 
 func TestModeSpecificRoutes(t *testing.T) {
 	svcInfo.Environment = "dev"
-	router := WebRouter(svcInfo, &MockMongoDBClient{}, &MockMongoDataBase{})
+	router := WebRouter(svcInfo, &mocks.MockDataMgr{})
 	list := router.Routes()
 	mode := gin.Mode()
 

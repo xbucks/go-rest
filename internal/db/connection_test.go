@@ -1,23 +1,19 @@
 package db
 
 import (
-	"context"
 	"github.com/bxcodec/faker/v3"
 	"github.com/rameshsunkara/go-rest-api-example/internal/models"
-	"math/rand"
-	"os"
-	"testing"
-	"time"
-
 	"github.com/rs/zerolog/log"
 	"github.com/stretchr/testify/assert"
 	"github.com/strikesecurity/strikememongo"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	"math/rand"
+	"os"
+	"testing"
 )
 
 var (
-	TestDataBase *mongo.Database
+	dbMgr DataManager
 )
 
 func TestMain(m *testing.M) {
@@ -27,26 +23,18 @@ func TestMain(m *testing.M) {
 	}
 	defer mongoServer.Stop()
 
-	client, err := mongo.NewClient(options.Client().ApplyURI(mongoServer.URI()))
-	if err != nil {
-		return
+	d, dErr := Init(strikememongo.RandomDatabase(), mongoServer.URI())
+	if dErr != nil {
+		log.Fatal().Err(dErr)
 	}
-
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-	err = client.Connect(ctx)
-	if err != nil {
-		log.Fatal().Err(err)
-	}
-	TestDataBase = client.Database(strikememongo.RandomDatabase())
-	OverrideDBSetup(client, TestDataBase)
+	dbMgr = d
 	insertTestData()
 
 	os.Exit(m.Run())
 }
 
 func insertTestData() {
-	db, err := GetDB()
+	db, err := dbMgr.Database()
 	if err != nil {
 		log.Panic().Err(err).Msg("database is not initialized")
 	}
@@ -78,16 +66,14 @@ func insertTestData() {
 	}
 }
 
-func TestDBSuccess(t *testing.T) {
-	db, err := GetDB()
+func TestDatabase(t *testing.T) {
+	d, err := dbMgr.Database()
 	assert.Nil(t, err)
-	assert.NotNil(t, db)
-	assert.IsType(t, *db, mongo.Database{})
+	assert.NotNil(t, d)
+	assert.IsType(t, &mongo.Database{}, d)
 }
 
-func TestDBClient(t *testing.T) {
-	client, err := GetDBClient()
+func TestPing(t *testing.T) {
+	err := dbMgr.Ping()
 	assert.Nil(t, err)
-	assert.NotNil(t, client)
-	assert.IsType(t, *client, mongo.Client{})
 }

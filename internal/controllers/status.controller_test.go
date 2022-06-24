@@ -1,36 +1,18 @@
-package handlers
+package controllers
 
 import (
-	"context"
 	"encoding/json"
 	"errors"
 	"github.com/gin-gonic/gin"
+	"github.com/rameshsunkara/go-rest-api-example/internal/mocks"
 	"github.com/rameshsunkara/go-rest-api-example/internal/models"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
 )
-
-type MockMongoDBClient struct{}
-
-var (
-	pingFunc func(ctx context.Context, rp *readpref.ReadPref) error
-	svcInfo  = &models.ServiceInfo{
-		Name:        "test-api-service",
-		Version:     "rams-fav",
-		UpTime:      time.Now(),
-		Environment: "test",
-	}
-	sc = NewStatusHandler(svcInfo, &MockMongoDBClient{})
-)
-
-func (m *MockMongoDBClient) Ping(ctx context.Context, rp *readpref.ReadPref) error {
-	return pingFunc(ctx, rp)
-}
 
 func UnMarshalStatusResponse(resp *http.Response) (StatusResponse, error) {
 	body, _ := io.ReadAll(resp.Body)
@@ -39,17 +21,27 @@ func UnMarshalStatusResponse(resp *http.Response) (StatusResponse, error) {
 	return statusResponse, err
 }
 
+var (
+	svcInfo = &models.ServiceInfo{
+		Name:        "test-api-service",
+		Version:     "rams-fav",
+		UpTime:      time.Now(),
+		Environment: "test",
+	}
+	s = NewStatusController(svcInfo, &mocks.MockDataMgr{})
+)
+
 func TestStatusSuccess(t *testing.T) {
 	// Test Setup
 	gin.SetMode(gin.TestMode)
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
-	pingFunc = func(ctx context.Context, rp *readpref.ReadPref) error {
+	mocks.PingFunc = func() error {
 		return nil
 	}
 
 	// Call actual function
-	sc.CheckStatus(c)
+	s.CheckStatus(c)
 
 	// Check results
 	resp := w.Result()
@@ -66,11 +58,11 @@ func TestStatusDown(t *testing.T) {
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 
-	pingFunc = func(ctx context.Context, rp *readpref.ReadPref) error {
+	mocks.PingFunc = func() error {
 		return errors.New("DB Connection Failed")
 	}
 
-	sc.CheckStatus(c)
+	s.CheckStatus(c)
 
 	resp := w.Result()
 	statusResponse, err := UnMarshalStatusResponse(resp)

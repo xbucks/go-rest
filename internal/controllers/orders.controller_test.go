@@ -1,63 +1,22 @@
-package handlers
+package controllers
 
 import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"github.com/gin-gonic/gin"
+	"github.com/rameshsunkara/go-rest-api-example/internal/mocks"
+	"github.com/rameshsunkara/go-rest-api-example/internal/models"
+	"github.com/stretchr/testify/assert"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"strconv"
 	"testing"
-
-	"github.com/gin-gonic/gin"
-	"github.com/rameshsunkara/go-rest-api-example/internal/db"
-	"github.com/rameshsunkara/go-rest-api-example/internal/models"
-	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
-
-type MockDataService struct{}
-
-type MockMongoDataBase struct{}
-
-func (m *MockMongoDataBase) Collection(name string, opts ...*options.CollectionOptions) *mongo.Collection {
-	return nil
-}
-
-var (
-	getCreateFunc     func(purchaseOrder *models.Order) (*mongo.InsertOneResult, error)
-	getUpdateFunc     func(purchaseOrder *models.Order) (int64, error)
-	getAllFunc        func() (*[]models.Order, error)
-	getByIdFunc       func(id string) (*models.Order, error)
-	getDeleteByIdFunc func(id string) (int64, error)
-	ic                = &OrdersHandler{
-		dataSvc: &MockDataService{},
-	}
-)
-
-func (m *MockDataService) Create(purchaseOrder *models.Order) (*mongo.InsertOneResult, error) {
-	return getCreateFunc(purchaseOrder)
-}
-
-func (m *MockDataService) Update(purchaseOrder *models.Order) (int64, error) {
-	return getUpdateFunc(purchaseOrder)
-}
-
-func (m *MockDataService) GetAll() (*[]models.Order, error) {
-	return getAllFunc()
-}
-
-func (m *MockDataService) GetById(id string) (*models.Order, error) {
-	return getByIdFunc(id)
-}
-
-func (m *MockDataService) DeleteById(id string) (int64, error) {
-	return getDeleteByIdFunc(id)
-}
 
 func UnMarshalOrdersResponse(d []byte) (*[]models.Order, error) {
 	var orders *[]models.Order
@@ -90,10 +49,10 @@ func UnMarshalCreateOrderResponse(d []byte) (*mongo.InsertOneResult, error) {
 }
 
 func TestNewOrdersHandler(t *testing.T) {
-	ohandler := NewOrdersHandler(&MockMongoDataBase{})
+	o := NewOrdersController(&mocks.MockDataService{})
 
-	assert.IsType(t, &OrdersHandler{}, ohandler)
-	assert.IsType(t, &db.OrdersDataService{}, ohandler.dataSvc)
+	assert.IsType(t, &OrdersController{}, o)
+	assert.IsType(t, &mocks.MockDataService{}, o.dataSvc)
 }
 
 func TestCreateOrderSuccess(t *testing.T) {
@@ -109,7 +68,7 @@ func TestCreateOrderSuccess(t *testing.T) {
 	})
 	body := bytes.NewReader(order)
 	c.Request, _ = http.NewRequest("POST", "/api/v1/orders", body)
-	getCreateFunc = func(*models.Order) (*mongo.InsertOneResult, error) {
+	mocks.CreateFunc = func(interface{}) (*mongo.InsertOneResult, error) {
 		data, err := ioutil.ReadFile("../mockdata/createOrder.json")
 		if err != nil {
 			return nil, err
@@ -119,7 +78,8 @@ func TestCreateOrderSuccess(t *testing.T) {
 	}
 
 	// Call actual function
-	ic.Post(c)
+	o := NewOrdersController(&mocks.MockDataService{})
+	o.Post(c)
 
 	// Check results
 	resp := w.Result()
@@ -142,12 +102,13 @@ func TestCreateOrderFailure_DBError(t *testing.T) {
 	})
 	body := bytes.NewReader(order)
 	c.Request, _ = http.NewRequest("POST", "/api/v1/orders", body)
-	getCreateFunc = func(*models.Order) (*mongo.InsertOneResult, error) {
+	mocks.CreateFunc = func(interface{}) (*mongo.InsertOneResult, error) {
 		return nil, errors.New("db error")
 	}
 
 	// Call actual function
-	ic.Post(c)
+	o := NewOrdersController(&mocks.MockDataService{})
+	o.Post(c)
 
 	// Check results
 	resp := w.Result()
@@ -162,12 +123,13 @@ func TestCreateOrderFailure_BadRequest(t *testing.T) {
 	order, _ := json.Marshal("Bad Request")
 	body := bytes.NewReader(order)
 	c.Request, _ = http.NewRequest("POST", "/api/v1/orders", body)
-	getCreateFunc = func(*models.Order) (*mongo.InsertOneResult, error) {
+	mocks.CreateFunc = func(interface{}) (*mongo.InsertOneResult, error) {
 		return nil, nil
 	}
 
 	// Call actual function
-	ic.Post(c)
+	o := NewOrdersController(&mocks.MockDataService{})
+	o.Post(c)
 
 	// Check results
 	resp := w.Result()
@@ -189,19 +151,20 @@ func TestUpdateOrderSuccess(t *testing.T) {
 	})
 	body := bytes.NewReader(order)
 	c.Request, _ = http.NewRequest("POST", "/api/v1/orders", body)
-	getUpdateFunc = func(*models.Order) (int64, error) {
+	mocks.UpdateFunc = func(interface{}) (int64, error) {
 		return 1, nil
 	}
 
 	// Call actual function
-	ic.Post(c)
+	o := NewOrdersController(&mocks.MockDataService{})
+	o.Post(c)
 
 	// Check results
 	resp := w.Result()
 	respBody, _ := io.ReadAll(resp.Body)
 	result, _ := strconv.Atoi(string(respBody))
 	assert.EqualValues(t, http.StatusOK, resp.StatusCode)
-	assert.EqualValues(t, result, 1)
+	assert.EqualValues(t, 1, result)
 }
 
 func TestGetAllOrdersSuccess(t *testing.T) {
@@ -209,7 +172,7 @@ func TestGetAllOrdersSuccess(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
-	getAllFunc = func() (*[]models.Order, error) {
+	mocks.GetAllFunc = func() (interface{}, error) {
 		data, err := ioutil.ReadFile("../mockdata/allOrders.json")
 		if err != nil {
 			return nil, err
@@ -219,7 +182,8 @@ func TestGetAllOrdersSuccess(t *testing.T) {
 	}
 
 	// Call actual function
-	ic.GetAll(c)
+	o := NewOrdersController(&mocks.MockDataService{})
+	o.GetAll(c)
 
 	// Check results
 	resp := w.Result()
@@ -234,13 +198,14 @@ func TestGetAllOrdersFailure_DBRead(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
-	getAllFunc = func() (*[]models.Order, error) {
+	mocks.GetAllFunc = func() (interface{}, error) {
 		_, err := ioutil.ReadFile("../mockdata/non-existing.json")
 		return nil, err
 	}
 
 	// Call actual function
-	ic.GetAll(c)
+	o := NewOrdersController(&mocks.MockDataService{})
+	o.GetAll(c)
 
 	// Check results
 	resp := w.Result()
@@ -254,7 +219,7 @@ func TestGetOrderSuccess(t *testing.T) {
 	c, _ := gin.CreateTestContext(w)
 	const id = "629536b3fac02728de50c042"
 	c.Params = []gin.Param{{Key: "id", Value: id}}
-	getByIdFunc = func(id string) (*models.Order, error) {
+	mocks.GetByIdFunc = func(id string) (interface{}, error) {
 		data, err := ioutil.ReadFile("../mockdata/order.json")
 		if err != nil {
 			return nil, err
@@ -264,7 +229,8 @@ func TestGetOrderSuccess(t *testing.T) {
 	}
 
 	// Call actual function
-	ic.GetById(c)
+	o := NewOrdersController(&mocks.MockDataService{})
+	o.GetById(c)
 
 	// Check results
 	resp := w.Result()
@@ -281,7 +247,7 @@ func TestGetOrderFailure_InvalidId(t *testing.T) {
 	c, _ := gin.CreateTestContext(w)
 	const id = ""
 	c.Params = []gin.Param{{Key: "id", Value: id}}
-	getByIdFunc = func(id string) (*models.Order, error) {
+	mocks.GetByIdFunc = func(id string) (interface{}, error) {
 		data, err := ioutil.ReadFile("../mockdata/order.json")
 		if err != nil {
 			return nil, err
@@ -291,7 +257,8 @@ func TestGetOrderFailure_InvalidId(t *testing.T) {
 	}
 
 	// Call actual function
-	ic.GetById(c)
+	o := NewOrdersController(&mocks.MockDataService{})
+	o.GetById(c)
 
 	// Check results
 	resp := w.Result()
@@ -305,13 +272,14 @@ func TestGetOrderFailure_DBRead(t *testing.T) {
 	c, _ := gin.CreateTestContext(w)
 	const id = "629536b3fac02728de50c042"
 	c.Params = []gin.Param{{Key: "id", Value: id}}
-	getByIdFunc = func(id string) (*models.Order, error) {
+	mocks.GetByIdFunc = func(id string) (interface{}, error) {
 		_, err := ioutil.ReadFile("../mockdata/nan.json")
 		return nil, err
 	}
 
 	// Call actual function
-	ic.GetById(c)
+	o := NewOrdersController(&mocks.MockDataService{})
+	o.GetById(c)
 
 	// Check results
 	resp := w.Result()
@@ -325,12 +293,13 @@ func TestDeleteOrderSuccess(t *testing.T) {
 	c, _ := gin.CreateTestContext(w)
 	const id = "629536b3fac02728de50c042"
 	c.Params = []gin.Param{{Key: "id", Value: id}}
-	getDeleteByIdFunc = func(id string) (int64, error) {
+	mocks.DeleteByIdFunc = func(id string) (int64, error) {
 		return 1, nil
 	}
 
 	// Call actual function
-	ic.DeleteById(c)
+	o := NewOrdersController(&mocks.MockDataService{})
+	o.DeleteById(c)
 
 	// Check results
 	resp := w.Result()
@@ -347,12 +316,13 @@ func TestDeleteOrderFailure_DBError(t *testing.T) {
 	c, _ := gin.CreateTestContext(w)
 	const id = "629536b3fac02728de50c042"
 	c.Params = []gin.Param{{Key: "id", Value: id}}
-	getDeleteByIdFunc = func(id string) (int64, error) {
+	mocks.DeleteByIdFunc = func(id string) (int64, error) {
 		return 1, errors.New("db error")
 	}
 
 	// Call actual function
-	ic.DeleteById(c)
+	o := NewOrdersController(&mocks.MockDataService{})
+	o.DeleteById(c)
 
 	// Check results
 	resp := w.Result()
@@ -366,12 +336,13 @@ func TestDeleteOrderFailure_BadRequest(t *testing.T) {
 	c, _ := gin.CreateTestContext(w)
 	const id = ""
 	c.Params = []gin.Param{{Key: "id", Value: id}}
-	getDeleteByIdFunc = func(id string) (int64, error) {
+	mocks.DeleteByIdFunc = func(id string) (int64, error) {
 		return 0, nil
 	}
 
 	// Call actual function
-	ic.DeleteById(c)
+	o := NewOrdersController(&mocks.MockDataService{})
+	o.DeleteById(c)
 
 	// Check results
 	resp := w.Result()
