@@ -47,7 +47,7 @@ func TestCreateSuccess(t *testing.T) {
 		log.Fatal().Err(err).Msg("unable to insert data")
 	}
 	orderId = result.InsertedID.(primitive.ObjectID)
-	assert.NotNil(t, result.InsertedID)
+	assert.True(t, !orderId.IsZero())
 }
 
 func TestCreate_InvalidReq(t *testing.T) {
@@ -84,21 +84,53 @@ func TestGetAllSuccess(t *testing.T) {
 	assert.EqualValues(t, 100, len(*orders))
 }
 
-/*
 func TestGetByIdSuccess(t *testing.T) {
 	d, _ := dbMgr.Database()
 	dSvc := NewOrderDataService(d)
-	result, _ := dSvc.GetById(orderId.String())
-	order := result.(models.Order)
+	result, _ := dSvc.GetById(orderId.Hex())
+	order := result.(*models.Order)
 	assert.NotNil(t, result)
-	assert.EqualValues(t, orderId, order.ID.String())
+	assert.EqualValues(t, orderId, order.ID)
 }
-*/
 
 func TestGetByIdSuccess_NoData(t *testing.T) {
 	d, _ := dbMgr.Database()
 	dSvc := NewOrderDataService(d)
-	const id = "hola-non-id"
-	result, _ := dSvc.GetById(id)
+	const id = "000000000000000000000000"
+	result, err := dSvc.GetById(id)
 	assert.Nil(t, result)
+	assert.Nil(t, err)
+}
+
+func TestGetById_InvalidId(t *testing.T) {
+	d, _ := dbMgr.Database()
+	dSvc := NewOrderDataService(d)
+	result, err := dSvc.GetById("i-am-an-invalid-id")
+	assert.Nil(t, result)
+	assert.Error(t, err)
+}
+
+func TestDeleteByIdSuccess(t *testing.T) {
+	d, _ := dbMgr.Database()
+	dSvc := NewOrderDataService(d)
+	result, err := dSvc.DeleteById(orderId.Hex())
+	assert.Nil(t, err)
+	assert.EqualValues(t, 1, result)
+}
+
+func TestDeleteByIdSuccess_NoData(t *testing.T) {
+	d, _ := dbMgr.Database()
+	dSvc := NewOrderDataService(d)
+	const id = "000000000000000000000000"
+	result, err := dSvc.DeleteById(id)
+	assert.Nil(t, err)
+	assert.EqualValues(t, 0, result)
+}
+
+func TestDeleteById_InvalidId(t *testing.T) {
+	d, _ := dbMgr.Database()
+	dSvc := NewOrderDataService(d)
+	result, err := dSvc.DeleteById("i-am-an-invalid-id")
+	assert.EqualValues(t, 0, result)
+	assert.Error(t, err)
 }

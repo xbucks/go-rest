@@ -108,9 +108,8 @@ func (ordDataSvc *OrdersDataService) GetById(id string) (interface{}, error) {
 		return nil, vErr
 	}
 
-	isValidId := primitive.IsValidObjectID(id)
 	docID, err := primitive.ObjectIDFromHex(id)
-	if err != nil || !isValidId {
+	if err != nil {
 		return nil, errors.New("bad request")
 	}
 	filter := bson.D{primitive.E{Key: "_id", Value: docID}}
@@ -132,9 +131,8 @@ func (ordDataSvc *OrdersDataService) DeleteById(id string) (int64, error) {
 		return 0, vErr
 	}
 
-	isValidId := primitive.IsValidObjectID(id)
 	docID, err := primitive.ObjectIDFromHex(id)
-	if err != nil || !isValidId {
+	if err != nil {
 		return 0, errors.New("bad request")
 	}
 	filter := bson.D{primitive.E{Key: "_id", Value: docID}}
