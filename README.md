@@ -14,12 +14,11 @@ There are many open source boilerplate repos but why I did this ?
    completely.
    So I created my own while obeying 'GO' principles and guidelines.
    You will find a lot of similarities in this repo when compared to the most popular go boilerplate templates because I
-   probably borrowed
-   ideas from them. (my apologies if I failed to miss any of them in the references)
+   probably borrowed ideas from them. (my apologies if I failed to miss any of them in the references)
 
 2. I wanted to pick the tools for Routing, Logging, Configuration Management etc., to my liking and preferences.
 
-3. I wanted a version which I have full control to change/update based on my professional work requirements.
+3. I wanted a version where I have full control to change/update based on my professional work requirements.
 
 ### QuickStart
 
@@ -66,8 +65,6 @@ Choose a command to run in go-rest-api-example:
       docker-clean-service-images                Stops and Removes the service images
       docker-clean-build-images                  Removes build images
       version                                    Display the current version of the API server
-      lint                                       Runs golint on all Go packages (TODO)
-      fmt                                        Run format "go fmt" on all Go packages
       api-docs                                   Generate OpenAPI3 Spec
       test                                       Run tests
       coverage                                   Measures code coverage and generates HTML report
@@ -83,20 +80,21 @@ Choose a command to run in go-rest-api-example:
 
 ### Features
 
-- Live reload
+- Live reload while developing
 - OpenApi3 Spec generation
-- Log file rotation
-- Easy to use 'make' tasks
+- Easy to use 'make' tasks to do everything
 - Multi-Stage container build (cache enabled)
-- Tag docker images with latest git commit
+- Versioning using git commit (both Application and Docker objects)
+- Git Actions to build, security analysis and to run code coverage
+- Templated Docker and Make files 
 
 ### TODO
 
 - [ ] Add more and clear documentation about the features this offers and how to replace tools
 - [ ] Automate Open API3 Spec Generation completely
-- [ ] Seed local DB through docker and add DB Migration Support
+- [ ] Add DB Migration Support
 - [ ] Add more profiles and obey all [12-Factor App rules](https://12factor.net/ru/)
-- [ ] Add CI/CD tooling
+- [ ] Deploy to cloud
 - [ ] Add missing references/inspirations
 - [ ] Improvements to the api in terms of error handling, proper messaging etc., ( that wasn't focus)
 - [ ] API Documentation - Lot of potential to improve
@@ -116,4 +114,3 @@ Choose a command to run in go-rest-api-example:
 
 - Default Swagger Docs doesn't use generated OpenAPI3 Spec
 - Docker Run make targets are for build server for now
-- LintCI should be fixed

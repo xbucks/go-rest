@@ -95,14 +95,6 @@ docker-clean-build-images:
 version:
 	@echo $(VERSION)
 
-## lint: Runs golint on all Go packages
-lint:
-
-
-## fmt: Run format "go fmt" on all Go packages
-fmt: 
-	@go fmt $(PACKAGES)
-
 ## api-docs: Generate OpenAPI3 Spec
 api-docs:
 	swag init -g main.go
