@@ -76,6 +76,48 @@ func TestCreate_InvalidReq(t *testing.T) {
 	assert.Error(t, err)
 }
 
+func TestUpdateSuccess(t *testing.T) {
+	d, _ := dbMgr.Database()
+	dSvc := NewOrderDataService(d)
+	product := []models.Product{
+		{
+			Name:      faker.Name(),
+			Price:     (uint)(rand.Intn(90) + 10),
+			Remarks:   faker.Sentence(),
+			UpdatedAt: faker.TimeString(),
+		},
+	}
+
+	po := &models.Order{
+		ID:       orderId,
+		Products: product,
+	}
+	result, err := dSvc.Update(po)
+	assert.EqualValues(t, 1, result)
+	assert.Nil(t, err)
+}
+
+func TestUpdate_InvalidId(t *testing.T) {
+	d, _ := dbMgr.Database()
+	dSvc := NewOrderDataService(d)
+	product := []models.Product{
+		{
+			Name:      faker.Name(),
+			Price:     (uint)(rand.Intn(90) + 10),
+			Remarks:   faker.Sentence(),
+			UpdatedAt: faker.TimeString(),
+		},
+	}
+
+	po := &models.Order{
+		ID:       primitive.NilObjectID,
+		Products: product,
+	}
+	result, err := dSvc.Update(po)
+	assert.EqualValues(t, 0, result)
+	assert.Error(t, err)
+}
+
 func TestGetAllSuccess(t *testing.T) {
 	d, _ := dbMgr.Database()
 	dSvc := NewOrderDataService(d)

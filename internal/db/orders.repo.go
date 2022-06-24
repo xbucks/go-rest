@@ -54,7 +54,7 @@ func (ordDataSvc *OrdersDataService) Update(po interface{}) (int64, error) {
 	}
 
 	purchaseOrder := po.(*models.Order)
-	if primitive.ObjectID.IsZero(purchaseOrder.ID) {
+	if primitive.ObjectID.IsZero(purchaseOrder.ID) || !primitive.IsValidObjectID(purchaseOrder.ID.Hex()) {
 		return 0, errors.New("invalid request")
 	}
 
