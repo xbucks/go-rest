@@ -22,7 +22,7 @@ There are many open source boilerplate repos but why I did this ?
 
 ### QuickStart
 
-Pre-requisites:
+Pre-requisites: Docker, Docker Compose, [Swag](https://github.com/swaggo/swag)
 
 - Docker Compose
 
@@ -35,16 +35,6 @@ Pre-requisites:
         open http://localhost:8080/swagger/index.html
 
    If you are a fan of Postman, import the included [Postman collection](orders.postman_collection.json)
-
-### QuickStart - Develop
-
-Pre-requisites: Docker, Docker Compose, [Swag](https://github.com/swaggo/swag), fswatch
-
-1. Start the service in live reload mode
-
-        make develop
-
-2. Use postman to explore the existing APIs, start with SeedDB request.
 
 Other Options:
 
