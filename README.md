@@ -24,8 +24,6 @@ There are many open source boilerplate repos but why I did this ?
 
 Pre-requisites: Docker, Docker Compose, [Swag](https://github.com/swaggo/swag)
 
-- Docker Compose
-
 1. Start the service
 
         make start
