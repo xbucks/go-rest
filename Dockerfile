@@ -1,4 +1,3 @@
-
 FROM golang:1.18 as builder
 LABEL stage=builder
 WORKDIR /usr/src/app

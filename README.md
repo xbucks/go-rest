@@ -50,24 +50,21 @@ Other Options:
 
 Choose a command to run in go-rest-api-example:
 
-      start                                      Starts everything that is required to serve the APIs
-      develop                                    Starts API Server in live reload mode and starts the required supplementary services in the background
-      run                                        Run the API server alone in normal mode (without supplemantary services such as DB etc.,)
-      restart                                    Restarts the API server
-      run-live                                   Run the API server with live reload support (requires fswatch)
-      build                                      Build the API server binary
-      docker-build                               Build the API server as a docker image
-      docker-run                                 Run the API server as a docker container
-      docker-start                               Builts Docker image and runs it.
-      docker-stop                                Stops the docker container
-      docker-remove                              Removes the docker images and containers   
-      docker-clean                               Cleans all docker resources
-      docker-clean-service-images                Stops and Removes the service images
-      docker-clean-build-images                  Removes build images
-      version                                    Display the current version of the API server
-      api-docs                                   Generate OpenAPI3 Spec
-      test                                       Run tests
-      coverage                                   Measures code coverage and generates HTML report
+        start                         Starts everything that is required to serve the APIs
+        run                           Run the API server alone in normal mode (without supplemantary services such as DB etc.,)
+        build                         Build the API server binary
+        docker-build                  Build the API server as a docker image
+        docker-run                    (WIP) Run the API server as a docker container
+        docker-start                  Builts Docker image and runs it.
+        docker-stop                   Stops the docker container
+        docker-remove                 Removes the docker images and containers
+        docker-clean                  Cleans all docker resources
+        docker-clean-service-images   Stops and Removes the service images
+        docker-clean-build-images     Removes build images
+        version                       Display the current version of the API server
+        api-docs                      Generate OpenAPI3 Spec
+        test                          Run tests
+        coverage                      Measures code coverage
 
 ### Tools
 
@@ -80,13 +77,12 @@ Choose a command to run in go-rest-api-example:
 
 ### Features
 
-- Live reload while developing
 - OpenApi3 Spec generation
 - Easy to use 'make' tasks to do everything
 - Multi-Stage container build (cache enabled)
 - Versioning using git commit (both Application and Docker objects)
 - Git Actions to build, security analysis and to run code coverage
-- Templated Docker and Make files 
+- Templated Docker and Make files
 
 ### TODO
 

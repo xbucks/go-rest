@@ -1,15 +1,16 @@
 package db
 
 import (
+	"math/rand"
+	"os"
+	"testing"
+
 	"github.com/bxcodec/faker/v3"
 	"github.com/rameshsunkara/go-rest-api-example/internal/models"
 	"github.com/rs/zerolog/log"
 	"github.com/stretchr/testify/assert"
 	"github.com/strikesecurity/strikememongo"
 	"go.mongodb.org/mongo-driver/mongo"
-	"math/rand"
-	"os"
-	"testing"
 )
 
 var (
