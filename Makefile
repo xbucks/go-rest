@@ -2,7 +2,7 @@
 
 export environment=$(profile)
 
-PROJECT_NAME := $(shell basename "$(PWD)")
+PROJECT_NAME := $(shell basename "$(PWD)" | tr '[:upper:]' '[:lower:]')
 
 # GIT commit id will be used as version of the application
 VERSION ?= $(shell git rev-parse --short HEAD)
