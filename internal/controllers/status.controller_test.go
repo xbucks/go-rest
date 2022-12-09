@@ -28,7 +28,7 @@ var (
 		UpTime:      time.Now(),
 		Environment: "test",
 	}
-	s = NewStatusController(svcInfo, &mocks.MockDataMgr{})
+	s = NewStatusController(svcInfo, &mocks.MockMongoMgr{})
 )
 
 func TestStatusSuccess(t *testing.T) {

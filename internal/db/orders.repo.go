@@ -19,18 +19,28 @@ const (
 	PageSize         = 100
 )
 
-type OrdersDataService struct {
-	collection *mongo.Collection
+// OrdersDataService  TODO: Strong type method definitions
+type OrdersDataService interface {
+	Create(ctx context.Context, purchaseOrder interface{}) (*mongo.InsertOneResult, error)
+	Update(ctx context.Context, purchaseOrder interface{}) (int64, error)
+	GetAll(ctx context.Context) (interface{}, error)
+	GetById(ctx context.Context, id string) (interface{}, error)
+	DeleteById(ctx context.Context, id string) (int64, error)
 }
 
-func NewOrderDataService(db MongoDatabase) *OrdersDataService {
-	iDBSvc := &OrdersDataService{
+func NewOrderDataService(db MongoDatabase) OrdersDataService {
+	iDBSvc := &OrdersRepo{
 		collection: db.Collection(OrdersCollection),
 	}
 	return iDBSvc
 }
 
-func (ordDataSvc *OrdersDataService) Create(po interface{}) (*mongo.InsertOneResult, error) {
+// OrdersRepo - Implements OrdersDataService
+type OrdersRepo struct {
+	collection *mongo.Collection
+}
+
+func (ordDataSvc *OrdersRepo) Create(ctx context.Context, po interface{}) (*mongo.InsertOneResult, error) {
 	if vErr := validate(ordDataSvc.collection); vErr != nil {
 		return nil, vErr
 	}
@@ -40,7 +50,7 @@ func (ordDataSvc *OrdersDataService) Create(po interface{}) (*mongo.InsertOneRes
 	}
 	purchaseOrder.LastUpdatedAt = util.CurrentISOTime()
 
-	result, err := ordDataSvc.collection.InsertOne(context.TODO(), purchaseOrder)
+	result, err := ordDataSvc.collection.InsertOne(ctx, purchaseOrder)
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +58,7 @@ func (ordDataSvc *OrdersDataService) Create(po interface{}) (*mongo.InsertOneRes
 }
 
 // Update - Create and Update can be merged using upsert, but this is to demonstrate CRUD rest API so ...
-func (ordDataSvc *OrdersDataService) Update(po interface{}) (int64, error) {
+func (ordDataSvc *OrdersRepo) Update(ctx context.Context, po interface{}) (int64, error) {
 	if vErr := validate(ordDataSvc.collection); vErr != nil {
 		return 0, vErr
 	}
@@ -63,7 +73,7 @@ func (ordDataSvc *OrdersDataService) Update(po interface{}) (int64, error) {
 	opts := options.Update().SetUpsert(true)
 	filter := bson.D{primitive.E{Key: "_id", Value: purchaseOrder.ID}}
 	update := bson.D{primitive.E{Key: "$set", Value: purchaseOrder}}
-	result, err := ordDataSvc.collection.UpdateOne(context.TODO(), filter, update, opts)
+	result, err := ordDataSvc.collection.UpdateOne(ctx, filter, update, opts)
 
 	if err != nil {
 		log.Err(err).Msg("Error occurred while updating order")
@@ -82,7 +92,7 @@ func (ordDataSvc *OrdersDataService) Update(po interface{}) (int64, error) {
 	return 0, nil
 }
 
-func (ordDataSvc *OrdersDataService) GetAll() (interface{}, error) {
+func (ordDataSvc *OrdersRepo) GetAll(ctx context.Context) (interface{}, error) {
 	if vErr := validate(ordDataSvc.collection); vErr != nil {
 		return nil, vErr
 	}
@@ -91,19 +101,19 @@ func (ordDataSvc *OrdersDataService) GetAll() (interface{}, error) {
 	options := options.Find()
 	options.SetLimit(PageSize)
 
-	cursor, err := ordDataSvc.collection.Find(context.TODO(), filter, options)
+	cursor, err := ordDataSvc.collection.Find(ctx, filter, options)
 	if err != nil {
 		return nil, err
 	}
 	var results []models.Order
-	if err = cursor.All(context.TODO(), &results); err != nil {
+	if err = cursor.All(ctx, &results); err != nil {
 		return nil, err
 	}
 
 	return &results, nil
 }
 
-func (ordDataSvc *OrdersDataService) GetById(id string) (interface{}, error) {
+func (ordDataSvc *OrdersRepo) GetById(ctx context.Context, id string) (interface{}, error) {
 	if vErr := validate(ordDataSvc.collection); vErr != nil {
 		return nil, vErr
 	}
@@ -115,7 +125,7 @@ func (ordDataSvc *OrdersDataService) GetById(id string) (interface{}, error) {
 	filter := bson.D{primitive.E{Key: "_id", Value: docID}}
 
 	var result models.Order
-	error := ordDataSvc.collection.FindOne(context.TODO(), filter).Decode(&result)
+	error := ordDataSvc.collection.FindOne(ctx, filter).Decode(&result)
 	if error != nil {
 		if error == mongo.ErrNoDocuments {
 			return nil, nil
@@ -126,7 +136,7 @@ func (ordDataSvc *OrdersDataService) GetById(id string) (interface{}, error) {
 	return &result, nil
 }
 
-func (ordDataSvc *OrdersDataService) DeleteById(id string) (int64, error) {
+func (ordDataSvc *OrdersRepo) DeleteById(ctx context.Context, id string) (int64, error) {
 	if vErr := validate(ordDataSvc.collection); vErr != nil {
 		return 0, vErr
 	}
@@ -137,7 +147,7 @@ func (ordDataSvc *OrdersDataService) DeleteById(id string) (int64, error) {
 	}
 	filter := bson.D{primitive.E{Key: "_id", Value: docID}}
 
-	res, error := ordDataSvc.collection.DeleteOne(context.TODO(), filter)
+	res, error := ordDataSvc.collection.DeleteOne(ctx, filter)
 	if error != nil {
 		return 0, error
 	}

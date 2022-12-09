@@ -20,7 +20,7 @@ var (
 )
 
 func TestListOfRoutes(t *testing.T) {
-	router := WebRouter(svcInfo, &mocks.MockDataMgr{})
+	router := WebRouter(svcInfo, &mocks.MockMongoMgr{})
 	list := router.Routes()
 	mode := gin.Mode()
 
@@ -65,7 +65,7 @@ func TestListOfRoutes(t *testing.T) {
 
 func TestModeSpecificRoutes(t *testing.T) {
 	svcInfo.Environment = "dev"
-	router := WebRouter(svcInfo, &mocks.MockDataMgr{})
+	router := WebRouter(svcInfo, &mocks.MockMongoMgr{})
 	list := router.Routes()
 	mode := gin.Mode()
 

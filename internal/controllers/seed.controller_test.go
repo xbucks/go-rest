@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"context"
 	"github.com/gin-gonic/gin"
 	"github.com/rameshsunkara/go-rest-api-example/internal/mocks"
 	"github.com/stretchr/testify/assert"
@@ -25,7 +26,7 @@ func TestSeedDB(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
-	mocks.CreateFunc = func(purchaseOrder interface{}) (*mongo.InsertOneResult, error) {
+	mocks.CreateFunc = func(ctx context.Context, purchaseOrder interface{}) (*mongo.InsertOneResult, error) {
 		return nil, nil
 	}
 

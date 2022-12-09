@@ -16,10 +16,10 @@ const (
 )
 
 type SeedController struct {
-	dataSvc db.DataService
+	dataSvc db.OrdersDataService
 }
 
-func NewSeedController(svc db.DataService) *SeedController {
+func NewSeedController(svc db.OrdersDataService) *SeedController {
 	ic := &SeedController{
 		dataSvc: svc,
 	}
@@ -46,7 +46,7 @@ func (s *SeedController) SeedDB(c *gin.Context) {
 		po := &models.Order{
 			Products: product,
 		}
-		_, err := s.dataSvc.Create(po)
+		_, err := s.dataSvc.Create(c, po)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"message": "Unable inserted data",

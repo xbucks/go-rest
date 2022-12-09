@@ -1,6 +1,7 @@
 package db
 
 import (
+	"context"
 	"math/rand"
 	"os"
 	"testing"
@@ -14,7 +15,7 @@ import (
 )
 
 var (
-	dbMgr DataManager
+	testDBMgr MongoManager
 )
 
 func TestMain(m *testing.M) {
@@ -28,14 +29,14 @@ func TestMain(m *testing.M) {
 	if dErr != nil {
 		log.Fatal().Err(dErr)
 	}
-	dbMgr = d
+	testDBMgr = d
 	insertTestData()
 
 	os.Exit(m.Run())
 }
 
 func insertTestData() {
-	db, err := dbMgr.Database()
+	db, err := testDBMgr.Database()
 	if err != nil {
 		log.Panic().Err(err).Msg("database is not initialized")
 	}
@@ -60,7 +61,7 @@ func insertTestData() {
 		po := &models.Order{
 			Products: product,
 		}
-		_, err := dSvc.Create(po)
+		_, err := dSvc.Create(context.TODO(), po)
 		if err != nil {
 			log.Fatal().Err(err).Msg("unable to insert data")
 		}
@@ -68,13 +69,13 @@ func insertTestData() {
 }
 
 func TestDatabase(t *testing.T) {
-	d, err := dbMgr.Database()
+	d, err := testDBMgr.Database()
 	assert.Nil(t, err)
 	assert.NotNil(t, d)
 	assert.IsType(t, &mongo.Database{}, d)
 }
 
 func TestPing(t *testing.T) {
-	err := dbMgr.Ping()
+	err := testDBMgr.Ping()
 	assert.Nil(t, err)
 }

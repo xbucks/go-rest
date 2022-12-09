@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"github.com/gin-gonic/gin"
@@ -14,6 +15,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"strconv"
 	"testing"
 )
@@ -68,7 +70,7 @@ func TestCreateOrderSuccess(t *testing.T) {
 	})
 	body := bytes.NewReader(order)
 	c.Request, _ = http.NewRequest("POST", "/api/v1/orders", body)
-	mocks.CreateFunc = func(interface{}) (*mongo.InsertOneResult, error) {
+	mocks.CreateFunc = func(ctx context.Context, order interface{}) (*mongo.InsertOneResult, error) {
 		data, err := ioutil.ReadFile("../mockdata/createOrder.json")
 		if err != nil {
 			return nil, err
@@ -102,7 +104,7 @@ func TestCreateOrderFailure_DBError(t *testing.T) {
 	})
 	body := bytes.NewReader(order)
 	c.Request, _ = http.NewRequest("POST", "/api/v1/orders", body)
-	mocks.CreateFunc = func(interface{}) (*mongo.InsertOneResult, error) {
+	mocks.CreateFunc = func(ctx context.Context, order interface{}) (*mongo.InsertOneResult, error) {
 		return nil, errors.New("db error")
 	}
 
@@ -123,7 +125,7 @@ func TestCreateOrderFailure_BadRequest(t *testing.T) {
 	order, _ := json.Marshal("Bad Request")
 	body := bytes.NewReader(order)
 	c.Request, _ = http.NewRequest("POST", "/api/v1/orders", body)
-	mocks.CreateFunc = func(interface{}) (*mongo.InsertOneResult, error) {
+	mocks.CreateFunc = func(ctx context.Context, order interface{}) (*mongo.InsertOneResult, error) {
 		return nil, nil
 	}
 
@@ -151,7 +153,7 @@ func TestUpdateOrderSuccess(t *testing.T) {
 	})
 	body := bytes.NewReader(order)
 	c.Request, _ = http.NewRequest("POST", "/api/v1/orders", body)
-	mocks.UpdateFunc = func(interface{}) (int64, error) {
+	mocks.UpdateFunc = func(ctx context.Context, order interface{}) (int64, error) {
 		return 1, nil
 	}
 
@@ -172,8 +174,8 @@ func TestGetAllOrdersSuccess(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
-	mocks.GetAllFunc = func() (interface{}, error) {
-		data, err := ioutil.ReadFile("../mockdata/allOrders.json")
+	mocks.GetAllFunc = func(ctx context.Context) (interface{}, error) {
+		data, err := os.ReadFile("../mockdata/allOrders.json")
 		if err != nil {
 			return nil, err
 		}
@@ -198,8 +200,8 @@ func TestGetAllOrdersFailure_DBRead(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
-	mocks.GetAllFunc = func() (interface{}, error) {
-		_, err := ioutil.ReadFile("../mockdata/non-existing.json")
+	mocks.GetAllFunc = func(ctx context.Context) (interface{}, error) {
+		_, err := os.ReadFile("../mockdata/non-existing.json")
 		return nil, err
 	}
 
@@ -219,8 +221,8 @@ func TestGetOrderSuccess(t *testing.T) {
 	c, _ := gin.CreateTestContext(w)
 	const id = "629536b3fac02728de50c042"
 	c.Params = []gin.Param{{Key: "id", Value: id}}
-	mocks.GetByIdFunc = func(id string) (interface{}, error) {
-		data, err := ioutil.ReadFile("../mockdata/order.json")
+	mocks.GetByIdFunc = func(ctx context.Context, id string) (interface{}, error) {
+		data, err := os.ReadFile("../mockdata/order.json")
 		if err != nil {
 			return nil, err
 		}
@@ -247,8 +249,8 @@ func TestGetOrderFailure_InvalidId(t *testing.T) {
 	c, _ := gin.CreateTestContext(w)
 	const id = ""
 	c.Params = []gin.Param{{Key: "id", Value: id}}
-	mocks.GetByIdFunc = func(id string) (interface{}, error) {
-		data, err := ioutil.ReadFile("../mockdata/order.json")
+	mocks.GetByIdFunc = func(ctx context.Context, id string) (interface{}, error) {
+		data, err := os.ReadFile("../mockdata/order.json")
 		if err != nil {
 			return nil, err
 		}
@@ -272,8 +274,8 @@ func TestGetOrderFailure_DBRead(t *testing.T) {
 	c, _ := gin.CreateTestContext(w)
 	const id = "629536b3fac02728de50c042"
 	c.Params = []gin.Param{{Key: "id", Value: id}}
-	mocks.GetByIdFunc = func(id string) (interface{}, error) {
-		_, err := ioutil.ReadFile("../mockdata/nan.json")
+	mocks.GetByIdFunc = func(ctx context.Context, id string) (interface{}, error) {
+		_, err := os.ReadFile("../mockdata/nan.json")
 		return nil, err
 	}
 
@@ -293,7 +295,7 @@ func TestDeleteOrderSuccess(t *testing.T) {
 	c, _ := gin.CreateTestContext(w)
 	const id = "629536b3fac02728de50c042"
 	c.Params = []gin.Param{{Key: "id", Value: id}}
-	mocks.DeleteByIdFunc = func(id string) (int64, error) {
+	mocks.DeleteByIdFunc = func(ctx context.Context, id string) (int64, error) {
 		return 1, nil
 	}
 
@@ -316,7 +318,7 @@ func TestDeleteOrderFailure_DBError(t *testing.T) {
 	c, _ := gin.CreateTestContext(w)
 	const id = "629536b3fac02728de50c042"
 	c.Params = []gin.Param{{Key: "id", Value: id}}
-	mocks.DeleteByIdFunc = func(id string) (int64, error) {
+	mocks.DeleteByIdFunc = func(ctx context.Context, id string) (int64, error) {
 		return 1, errors.New("db error")
 	}
 
@@ -336,7 +338,7 @@ func TestDeleteOrderFailure_BadRequest(t *testing.T) {
 	c, _ := gin.CreateTestContext(w)
 	const id = ""
 	c.Params = []gin.Param{{Key: "id", Value: id}}
-	mocks.DeleteByIdFunc = func(id string) (int64, error) {
+	mocks.DeleteByIdFunc = func(ctx context.Context, id string) (int64, error) {
 		return 0, nil
 	}
 

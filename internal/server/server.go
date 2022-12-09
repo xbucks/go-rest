@@ -16,7 +16,7 @@ import (
 
 var runOnce sync.Once
 
-func Init(serviceInfo *models.ServiceInfo, manager db.DataManager) {
+func Init(serviceInfo *models.ServiceInfo, manager db.MongoManager) {
 	config := config.GetConfig()
 	port := config.GetString("server.port")
 	runOnce.Do(func() {
@@ -25,7 +25,7 @@ func Init(serviceInfo *models.ServiceInfo, manager db.DataManager) {
 	})
 }
 
-func WebRouter(svcInfo *models.ServiceInfo, dbMgr db.DataManager) (router *gin.Engine) {
+func WebRouter(svcInfo *models.ServiceInfo, dbMgr db.MongoManager) (router *gin.Engine) {
 	ginMode := gin.ReleaseMode
 	if util.IsDevMode(svcInfo.Environment) {
 		ginMode = gin.DebugMode

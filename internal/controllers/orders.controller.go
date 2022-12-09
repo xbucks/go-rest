@@ -13,10 +13,10 @@ const (
 )
 
 type OrdersController struct {
-	dataSvc db.DataService
+	dataSvc db.OrdersDataService
 }
 
-func NewOrdersController(svc db.DataService) *OrdersController {
+func NewOrdersController(svc db.OrdersDataService) *OrdersController {
 	ic := &OrdersController{
 		dataSvc: svc,
 	}
@@ -40,12 +40,12 @@ func (oHandler *OrdersController) Post(c *gin.Context) {
 	}
 
 	if purchaseRequest.ID.IsZero() {
-		if uid, _ := oHandler.dataSvc.Create(&purchaseRequest); uid != nil {
+		if uid, _ := oHandler.dataSvc.Create(c, &purchaseRequest); uid != nil {
 			c.JSON(http.StatusOK, uid)
 			return
 		}
 	} else {
-		if updatedCount, _ := oHandler.dataSvc.Update(&purchaseRequest); updatedCount != 0 {
+		if updatedCount, _ := oHandler.dataSvc.Update(c, &purchaseRequest); updatedCount != 0 {
 			c.JSON(http.StatusOK, updatedCount)
 			return
 		}
@@ -63,7 +63,7 @@ func (oHandler *OrdersController) Post(c *gin.Context) {
 // @Success      200
 // @Router       /orders/ [get]
 func (oHandler *OrdersController) GetAll(c *gin.Context) {
-	orders, err := oHandler.dataSvc.GetAll()
+	orders, err := oHandler.dataSvc.GetAll(c)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Error occurred while retrieved purchase orders", "error": err})
 		c.Abort()
@@ -85,7 +85,7 @@ func (oHandler *OrdersController) GetAll(c *gin.Context) {
 func (oHandler *OrdersController) GetById(c *gin.Context) {
 	id := c.Param(OrderIdPath)
 	if id != "" {
-		order, err := oHandler.dataSvc.GetById(id)
+		order, err := oHandler.dataSvc.GetById(c, id)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"message": "Error to retrieve order details", "error": err.Error()})
 			c.Abort()
@@ -111,7 +111,7 @@ func (oHandler *OrdersController) GetById(c *gin.Context) {
 func (oHandler *OrdersController) DeleteById(c *gin.Context) {
 	id := c.Param(OrderIdPath)
 	if id != "" {
-		count, err := oHandler.dataSvc.DeleteById(id)
+		count, err := oHandler.dataSvc.DeleteById(c, id)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"message": "Error to retrieve order details", "error": err.Error()})
 			c.Abort()

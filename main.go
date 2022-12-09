@@ -66,6 +66,7 @@ func main() {
 	if dErr != nil {
 		log.Fatal().Err(dErr).Msg("unable to initialize DB connection")
 	}
+	defer dbManager.Disconnect() // TODO: Fix this
 
 	// Setup : Server
 	server.Init(serviceInfo, dbManager)

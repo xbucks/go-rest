@@ -28,10 +28,10 @@ type StatusResponse struct {
 
 type StatusController struct {
 	svcInfo *models.ServiceInfo
-	dbMgr   db.DataManager
+	dbMgr   db.MongoManager
 }
 
-func NewStatusController(s *models.ServiceInfo, m db.DataManager) *StatusController {
+func NewStatusController(s *models.ServiceInfo, m db.MongoManager) *StatusController {
 	return &StatusController{
 		svcInfo: s,
 		dbMgr:   m,
