@@ -47,6 +47,11 @@ func Init(dbName string, connUrl string) (MongoManager, error) {
 			dbMgr.database = db
 			dbMgr.client = c
 		}
+
+		// Verify connection
+		if err := dbMgr.Ping(); err != nil {
+			connErr = err
+		}
 	})
 
 	return dbMgr, connErr
