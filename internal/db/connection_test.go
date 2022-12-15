@@ -9,9 +9,9 @@ import (
 	"github.com/bxcodec/faker/v3"
 	"github.com/rameshsunkara/go-rest-api-example/internal/db"
 	"github.com/rameshsunkara/go-rest-api-example/internal/models"
+	"github.com/rameshsunkara/strikememongo"
 	"github.com/rs/zerolog/log"
 	"github.com/stretchr/testify/assert"
-	"github.com/strikesecurity/strikememongo"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -20,7 +20,7 @@ var (
 )
 
 func TestMain(m *testing.M) {
-	mongoServer, err := strikememongo.Start("4.0.5") // TODO: Only this version works, figure out why ?
+	mongoServer, err := strikememongo.Start("6.0.3")
 	if err != nil {
 		log.Fatal().Err(err)
 	}
