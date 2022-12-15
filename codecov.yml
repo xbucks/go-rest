@@ -28,7 +28,8 @@ coverage:
         target: auto
         threshold: 5.0
         ignore:
-        - ^docs.*"
+        - ^docs.*
+        - *_mock.go
 
 
 github_checks:
