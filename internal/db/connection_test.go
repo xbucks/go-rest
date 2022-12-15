@@ -1,4 +1,4 @@
-package db
+package db_test
 
 import (
 	"context"
@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/bxcodec/faker/v3"
+	"github.com/rameshsunkara/go-rest-api-example/internal/db"
 	"github.com/rameshsunkara/go-rest-api-example/internal/models"
 	"github.com/rs/zerolog/log"
 	"github.com/stretchr/testify/assert"
@@ -15,7 +16,7 @@ import (
 )
 
 var (
-	testDBMgr MongoManager
+	testDBMgr db.MongoManager
 )
 
 func TestMain(m *testing.M) {
@@ -25,7 +26,7 @@ func TestMain(m *testing.M) {
 	}
 	defer mongoServer.Stop()
 
-	d, dErr := Init(strikememongo.RandomDatabase(), mongoServer.URI())
+	d, dErr := db.Init(strikememongo.RandomDatabase(), mongoServer.URI())
 	if dErr != nil {
 		log.Fatal().Err(dErr)
 	}
@@ -36,11 +37,11 @@ func TestMain(m *testing.M) {
 }
 
 func insertTestData() {
-	db, err := testDBMgr.Database()
+	database, err := testDBMgr.Database()
 	if err != nil {
 		log.Panic().Err(err).Msg("database is not initialized")
 	}
-	dSvc := NewOrderDataService(db)
+	dSvc := db.NewOrderDataService(database)
 
 	for i := 0; i < 500; i++ {
 		product := []models.Product{

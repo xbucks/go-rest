@@ -1,13 +1,15 @@
-package server
+package server_test
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/rameshsunkara/go-rest-api-example/internal/mocks"
-	"github.com/rameshsunkara/go-rest-api-example/internal/models"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"testing"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/rameshsunkara/go-rest-api-example/internal/mocks"
+	"github.com/rameshsunkara/go-rest-api-example/internal/models"
+	"github.com/rameshsunkara/go-rest-api-example/internal/server"
+	"github.com/stretchr/testify/assert"
 )
 
 var (
@@ -20,7 +22,7 @@ var (
 )
 
 func TestListOfRoutes(t *testing.T) {
-	router := WebRouter(svcInfo, &mocks.MockMongoMgr{})
+	router := server.WebRouter(svcInfo, &mocks.MockMongoMgr{})
 	list := router.Routes()
 	mode := gin.Mode()
 
@@ -65,7 +67,7 @@ func TestListOfRoutes(t *testing.T) {
 
 func TestModeSpecificRoutes(t *testing.T) {
 	svcInfo.Environment = "dev"
-	router := WebRouter(svcInfo, &mocks.MockMongoMgr{})
+	router := server.WebRouter(svcInfo, &mocks.MockMongoMgr{})
 	list := router.Routes()
 	mode := gin.Mode()
 

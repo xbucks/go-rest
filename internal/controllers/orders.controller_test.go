@@ -5,12 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"github.com/gin-gonic/gin"
-	"github.com/rameshsunkara/go-rest-api-example/internal/mocks"
-	"github.com/rameshsunkara/go-rest-api-example/internal/models"
-	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -18,6 +12,13 @@ import (
 	"os"
 	"strconv"
 	"testing"
+
+	"github.com/gin-gonic/gin"
+	"github.com/rameshsunkara/go-rest-api-example/internal/mocks"
+	"github.com/rameshsunkara/go-rest-api-example/internal/models"
+	"github.com/stretchr/testify/assert"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func UnMarshalOrdersResponse(d []byte) (*[]models.Order, error) {
@@ -51,10 +52,10 @@ func UnMarshalCreateOrderResponse(d []byte) (*mongo.InsertOneResult, error) {
 }
 
 func TestNewOrdersHandler(t *testing.T) {
-	o := NewOrdersController(&mocks.MockDataService{})
+	o := NewOrdersController(&mocks.MockOrdersDataService{})
 
 	assert.IsType(t, &OrdersController{}, o)
-	assert.IsType(t, &mocks.MockDataService{}, o.dataSvc)
+	assert.IsType(t, &mocks.MockOrdersDataService{}, o.dataSvc)
 }
 
 func TestCreateOrderSuccess(t *testing.T) {
@@ -71,7 +72,7 @@ func TestCreateOrderSuccess(t *testing.T) {
 	body := bytes.NewReader(order)
 	c.Request, _ = http.NewRequest("POST", "/api/v1/orders", body)
 	mocks.CreateFunc = func(ctx context.Context, order interface{}) (*mongo.InsertOneResult, error) {
-		data, err := ioutil.ReadFile("../mockdata/createOrder.json")
+		data, err := ioutil.ReadFile("../../mockdata/createOrder.json")
 		if err != nil {
 			return nil, err
 		}
@@ -80,7 +81,7 @@ func TestCreateOrderSuccess(t *testing.T) {
 	}
 
 	// Call actual function
-	o := NewOrdersController(&mocks.MockDataService{})
+	o := NewOrdersController(&mocks.MockOrdersDataService{})
 	o.Post(c)
 
 	// Check results
@@ -109,7 +110,7 @@ func TestCreateOrderFailure_DBError(t *testing.T) {
 	}
 
 	// Call actual function
-	o := NewOrdersController(&mocks.MockDataService{})
+	o := NewOrdersController(&mocks.MockOrdersDataService{})
 	o.Post(c)
 
 	// Check results
@@ -130,7 +131,7 @@ func TestCreateOrderFailure_BadRequest(t *testing.T) {
 	}
 
 	// Call actual function
-	o := NewOrdersController(&mocks.MockDataService{})
+	o := NewOrdersController(&mocks.MockOrdersDataService{})
 	o.Post(c)
 
 	// Check results
@@ -158,7 +159,7 @@ func TestUpdateOrderSuccess(t *testing.T) {
 	}
 
 	// Call actual function
-	o := NewOrdersController(&mocks.MockDataService{})
+	o := NewOrdersController(&mocks.MockOrdersDataService{})
 	o.Post(c)
 
 	// Check results
@@ -175,7 +176,7 @@ func TestGetAllOrdersSuccess(t *testing.T) {
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 	mocks.GetAllFunc = func(ctx context.Context) (interface{}, error) {
-		data, err := os.ReadFile("../mockdata/allOrders.json")
+		data, err := os.ReadFile("../../mockdata/allOrders.json")
 		if err != nil {
 			return nil, err
 		}
@@ -184,7 +185,7 @@ func TestGetAllOrdersSuccess(t *testing.T) {
 	}
 
 	// Call actual function
-	o := NewOrdersController(&mocks.MockDataService{})
+	o := NewOrdersController(&mocks.MockOrdersDataService{})
 	o.GetAll(c)
 
 	// Check results
@@ -201,12 +202,12 @@ func TestGetAllOrdersFailure_DBRead(t *testing.T) {
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 	mocks.GetAllFunc = func(ctx context.Context) (interface{}, error) {
-		_, err := os.ReadFile("../mockdata/non-existing.json")
+		_, err := os.ReadFile("../../mockdata/non-existing.json")
 		return nil, err
 	}
 
 	// Call actual function
-	o := NewOrdersController(&mocks.MockDataService{})
+	o := NewOrdersController(&mocks.MockOrdersDataService{})
 	o.GetAll(c)
 
 	// Check results
@@ -222,7 +223,7 @@ func TestGetOrderSuccess(t *testing.T) {
 	const id = "629536b3fac02728de50c042"
 	c.Params = []gin.Param{{Key: "id", Value: id}}
 	mocks.GetByIdFunc = func(ctx context.Context, id string) (interface{}, error) {
-		data, err := os.ReadFile("../mockdata/order.json")
+		data, err := os.ReadFile("../../mockdata/order.json")
 		if err != nil {
 			return nil, err
 		}
@@ -231,7 +232,7 @@ func TestGetOrderSuccess(t *testing.T) {
 	}
 
 	// Call actual function
-	o := NewOrdersController(&mocks.MockDataService{})
+	o := NewOrdersController(&mocks.MockOrdersDataService{})
 	o.GetById(c)
 
 	// Check results
@@ -250,7 +251,7 @@ func TestGetOrderFailure_InvalidId(t *testing.T) {
 	const id = ""
 	c.Params = []gin.Param{{Key: "id", Value: id}}
 	mocks.GetByIdFunc = func(ctx context.Context, id string) (interface{}, error) {
-		data, err := os.ReadFile("../mockdata/order.json")
+		data, err := os.ReadFile("../../mockdata/order.json")
 		if err != nil {
 			return nil, err
 		}
@@ -259,7 +260,7 @@ func TestGetOrderFailure_InvalidId(t *testing.T) {
 	}
 
 	// Call actual function
-	o := NewOrdersController(&mocks.MockDataService{})
+	o := NewOrdersController(&mocks.MockOrdersDataService{})
 	o.GetById(c)
 
 	// Check results
@@ -275,12 +276,12 @@ func TestGetOrderFailure_DBRead(t *testing.T) {
 	const id = "629536b3fac02728de50c042"
 	c.Params = []gin.Param{{Key: "id", Value: id}}
 	mocks.GetByIdFunc = func(ctx context.Context, id string) (interface{}, error) {
-		_, err := os.ReadFile("../mockdata/nan.json")
+		_, err := os.ReadFile("../../mockdata/nan.json")
 		return nil, err
 	}
 
 	// Call actual function
-	o := NewOrdersController(&mocks.MockDataService{})
+	o := NewOrdersController(&mocks.MockOrdersDataService{})
 	o.GetById(c)
 
 	// Check results
@@ -300,7 +301,7 @@ func TestDeleteOrderSuccess(t *testing.T) {
 	}
 
 	// Call actual function
-	o := NewOrdersController(&mocks.MockDataService{})
+	o := NewOrdersController(&mocks.MockOrdersDataService{})
 	o.DeleteById(c)
 
 	// Check results
@@ -323,7 +324,7 @@ func TestDeleteOrderFailure_DBError(t *testing.T) {
 	}
 
 	// Call actual function
-	o := NewOrdersController(&mocks.MockDataService{})
+	o := NewOrdersController(&mocks.MockOrdersDataService{})
 	o.DeleteById(c)
 
 	// Check results
@@ -343,7 +344,7 @@ func TestDeleteOrderFailure_BadRequest(t *testing.T) {
 	}
 
 	// Call actual function
-	o := NewOrdersController(&mocks.MockDataService{})
+	o := NewOrdersController(&mocks.MockOrdersDataService{})
 	o.DeleteById(c)
 
 	// Check results

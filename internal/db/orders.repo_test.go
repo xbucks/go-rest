@@ -1,4 +1,4 @@
-package db
+package db_test
 
 import (
 	"context"
@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/bxcodec/faker/v3"
+	"github.com/rameshsunkara/go-rest-api-example/internal/db"
 	"github.com/rameshsunkara/go-rest-api-example/internal/models"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -15,14 +16,14 @@ var orderId primitive.ObjectID
 
 func TestNewOrderDataService(t *testing.T) {
 	d, _ := testDBMgr.Database()
-	ds := NewOrderDataService(d)
-	assert.IsType(t, &OrdersRepo{}, ds)
-	assert.Implements(t, (*OrdersDataService)(nil), ds)
+	ds := db.NewOrderDataService(d)
+	assert.IsType(t, &db.OrdersRepo{}, ds)
+	assert.Implements(t, (*db.OrdersDataService)(nil), ds)
 }
 
 func TestCreateSuccess(t *testing.T) {
 	d, _ := testDBMgr.Database()
-	dSvc := NewOrderDataService(d)
+	dSvc := db.NewOrderDataService(d)
 	product := []models.Product{
 		{
 			Name:      faker.Name(),
@@ -51,7 +52,7 @@ func TestCreateSuccess(t *testing.T) {
 
 func TestCreate_InvalidReq(t *testing.T) {
 	d, _ := testDBMgr.Database()
-	dSvc := NewOrderDataService(d)
+	dSvc := db.NewOrderDataService(d)
 	product := []models.Product{
 		{
 			Name:      faker.Name(),
@@ -77,7 +78,7 @@ func TestCreate_InvalidReq(t *testing.T) {
 
 func TestUpdateSuccess(t *testing.T) {
 	d, _ := testDBMgr.Database()
-	dSvc := NewOrderDataService(d)
+	dSvc := db.NewOrderDataService(d)
 	product := []models.Product{
 		{
 			Name:      faker.Name(),
@@ -98,7 +99,7 @@ func TestUpdateSuccess(t *testing.T) {
 
 func TestUpdate_InvalidId(t *testing.T) {
 	d, _ := testDBMgr.Database()
-	dSvc := NewOrderDataService(d)
+	dSvc := db.NewOrderDataService(d)
 	product := []models.Product{
 		{
 			Name:      faker.Name(),
@@ -119,7 +120,7 @@ func TestUpdate_InvalidId(t *testing.T) {
 
 func TestGetAllSuccess(t *testing.T) {
 	d, _ := testDBMgr.Database()
-	dSvc := NewOrderDataService(d)
+	dSvc := db.NewOrderDataService(d)
 	results, _ := dSvc.GetAll(context.TODO())
 	orders := results.(*[]models.Order)
 	assert.EqualValues(t, 100, len(*orders))
@@ -127,7 +128,7 @@ func TestGetAllSuccess(t *testing.T) {
 
 func TestGetByIdSuccess(t *testing.T) {
 	d, _ := testDBMgr.Database()
-	dSvc := NewOrderDataService(d)
+	dSvc := db.NewOrderDataService(d)
 	result, _ := dSvc.GetById(context.TODO(), orderId.Hex())
 	order := result.(*models.Order)
 	assert.NotNil(t, result)
@@ -136,7 +137,7 @@ func TestGetByIdSuccess(t *testing.T) {
 
 func TestGetByIdSuccess_NoData(t *testing.T) {
 	d, _ := testDBMgr.Database()
-	dSvc := NewOrderDataService(d)
+	dSvc := db.NewOrderDataService(d)
 	const id = "000000000000000000000000"
 	result, err := dSvc.GetById(context.TODO(), id)
 	assert.Nil(t, result)
@@ -145,7 +146,7 @@ func TestGetByIdSuccess_NoData(t *testing.T) {
 
 func TestGetById_InvalidId(t *testing.T) {
 	d, _ := testDBMgr.Database()
-	dSvc := NewOrderDataService(d)
+	dSvc := db.NewOrderDataService(d)
 	result, err := dSvc.GetById(context.TODO(), "i-am-an-invalid-id")
 	assert.Nil(t, result)
 	assert.Error(t, err)
@@ -153,7 +154,7 @@ func TestGetById_InvalidId(t *testing.T) {
 
 func TestDeleteByIdSuccess(t *testing.T) {
 	d, _ := testDBMgr.Database()
-	dSvc := NewOrderDataService(d)
+	dSvc := db.NewOrderDataService(d)
 	result, err := dSvc.DeleteById(context.TODO(), orderId.Hex())
 	assert.Nil(t, err)
 	assert.EqualValues(t, 1, result)
@@ -161,7 +162,7 @@ func TestDeleteByIdSuccess(t *testing.T) {
 
 func TestDeleteByIdSuccess_NoData(t *testing.T) {
 	d, _ := testDBMgr.Database()
-	dSvc := NewOrderDataService(d)
+	dSvc := db.NewOrderDataService(d)
 	const id = "000000000000000000000000"
 	result, err := dSvc.DeleteById(context.TODO(), id)
 	assert.Nil(t, err)
@@ -170,7 +171,7 @@ func TestDeleteByIdSuccess_NoData(t *testing.T) {
 
 func TestDeleteById_InvalidId(t *testing.T) {
 	d, _ := testDBMgr.Database()
-	dSvc := NewOrderDataService(d)
+	dSvc := db.NewOrderDataService(d)
 	result, err := dSvc.DeleteById(context.TODO(), "i-am-an-invalid-id")
 	assert.EqualValues(t, 0, result)
 	assert.Error(t, err)
