@@ -46,7 +46,7 @@ func WebRouter(svcInfo *models.ServiceInfo, dbMgr db.MongoManager) (router *gin.
 	router.GET("/status", status.CheckStatus) // /status
 
 	// Dependencies for controllers
-	d, _ := dbMgr.Database()
+	d := dbMgr.Database()
 	orders := db.NewOrderDataService(d)
 
 	// Routes - Seed DB

@@ -62,7 +62,7 @@ func main() {
 	}
 
 	// Setup : DB
-	dbManager, dErr := db.Init(DBName, c.GetString("db.dsn"))
+	dbManager, dErr := db.NewMongoManager(DBName, c.GetString("db.dsn"))
 	if dErr != nil {
 		log.Fatal().Err(dErr).Msg("unable to initialize DB connection")
 	}

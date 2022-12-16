@@ -26,7 +26,7 @@ func TestMain(m *testing.M) {
 	}
 	defer mongoServer.Stop()
 
-	d, dErr := db.Init(strikememongo.RandomDatabase(), mongoServer.URI())
+	d, dErr := db.NewMongoManager(strikememongo.RandomDatabase(), mongoServer.URI())
 	if dErr != nil {
 		log.Fatal().Err(dErr)
 	}
@@ -37,10 +37,7 @@ func TestMain(m *testing.M) {
 }
 
 func insertTestData() {
-	database, err := testDBMgr.Database()
-	if err != nil {
-		log.Panic().Err(err).Msg("database is not initialized")
-	}
+	database := testDBMgr.Database()
 	dSvc := db.NewOrderDataService(database)
 
 	for i := 0; i < 500; i++ {
@@ -70,8 +67,7 @@ func insertTestData() {
 }
 
 func TestDatabase(t *testing.T) {
-	d, err := testDBMgr.Database()
-	assert.Nil(t, err)
+	d := testDBMgr.Database()
 	assert.NotNil(t, d)
 	assert.IsType(t, &mongo.Database{}, d)
 }

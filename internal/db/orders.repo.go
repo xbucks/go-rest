@@ -29,18 +29,18 @@ type OrdersDataService interface {
 }
 
 func NewOrderDataService(db MongoDatabase) OrdersDataService {
-	iDBSvc := &OrdersRepo{
+	iDBSvc := &ordersRepo{
 		collection: db.Collection(OrdersCollection),
 	}
 	return iDBSvc
 }
 
-// OrdersRepo - Implements OrdersDataService
-type OrdersRepo struct {
+// ordersRepo - Implements OrdersDataService
+type ordersRepo struct {
 	collection *mongo.Collection
 }
 
-func (ordDataSvc *OrdersRepo) Create(ctx context.Context, po interface{}) (*mongo.InsertOneResult, error) {
+func (ordDataSvc *ordersRepo) Create(ctx context.Context, po interface{}) (*mongo.InsertOneResult, error) {
 	if vErr := validate(ordDataSvc.collection); vErr != nil {
 		return nil, vErr
 	}
@@ -58,7 +58,7 @@ func (ordDataSvc *OrdersRepo) Create(ctx context.Context, po interface{}) (*mong
 }
 
 // Update - Create and Update can be merged using upsert, but this is to demonstrate CRUD rest API so ...
-func (ordDataSvc *OrdersRepo) Update(ctx context.Context, po interface{}) (int64, error) {
+func (ordDataSvc *ordersRepo) Update(ctx context.Context, po interface{}) (int64, error) {
 	if vErr := validate(ordDataSvc.collection); vErr != nil {
 		return 0, vErr
 	}
@@ -92,7 +92,7 @@ func (ordDataSvc *OrdersRepo) Update(ctx context.Context, po interface{}) (int64
 	return 0, nil
 }
 
-func (ordDataSvc *OrdersRepo) GetAll(ctx context.Context) (interface{}, error) {
+func (ordDataSvc *ordersRepo) GetAll(ctx context.Context) (interface{}, error) {
 	if vErr := validate(ordDataSvc.collection); vErr != nil {
 		return nil, vErr
 	}
@@ -113,7 +113,7 @@ func (ordDataSvc *OrdersRepo) GetAll(ctx context.Context) (interface{}, error) {
 	return &results, nil
 }
 
-func (ordDataSvc *OrdersRepo) GetById(ctx context.Context, id string) (interface{}, error) {
+func (ordDataSvc *ordersRepo) GetById(ctx context.Context, id string) (interface{}, error) {
 	if vErr := validate(ordDataSvc.collection); vErr != nil {
 		return nil, vErr
 	}
@@ -136,7 +136,7 @@ func (ordDataSvc *OrdersRepo) GetById(ctx context.Context, id string) (interface
 	return &result, nil
 }
 
-func (ordDataSvc *OrdersRepo) DeleteById(ctx context.Context, id string) (int64, error) {
+func (ordDataSvc *ordersRepo) DeleteById(ctx context.Context, id string) (int64, error) {
 	if vErr := validate(ordDataSvc.collection); vErr != nil {
 		return 0, vErr
 	}

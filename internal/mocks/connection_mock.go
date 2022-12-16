@@ -16,8 +16,8 @@ func (m *MockMongoMgr) Ping() error {
 	return PingFunc()
 }
 
-func (m *MockMongoMgr) Database() (db.MongoDatabase, error) {
-	return &MockMongoDataBase{}, nil
+func (m *MockMongoMgr) Database() db.MongoDatabase {
+	return &MockMongoDataBase{}
 }
 
 func (m *MockMongoMgr) Disconnect() error {

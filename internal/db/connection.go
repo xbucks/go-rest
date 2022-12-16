@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-	"errors"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"sync"
 	"time"
@@ -22,22 +21,22 @@ type MongoDatabase interface {
 }
 
 type MongoManager interface {
-	Database() (MongoDatabase, error)
+	Database() MongoDatabase
 	Ping() error
 	Disconnect() error
 }
 
-// ConnectionManager - Implements MongoManager
-type ConnectionManager struct {
+// connectionManager - Implements MongoManager
+type connectionManager struct {
 	client   *mongo.Client
 	database *mongo.Database
 }
 
-// Init - Initializes DB connection and returns a Manager object which can be used to perform DB operations
-func Init(dbName string, connUrl string) (MongoManager, error) {
+// NewMongoManager - Initializes DB connection and returns a Manager object which can be used to perform DB operations
+func NewMongoManager(dbName string, connUrl string) (MongoManager, error) {
 	log.Debug().Str("DB Connection Url", connUrl)
 
-	dbMgr := &ConnectionManager{}
+	dbMgr := &connectionManager{}
 	var connErr error
 	connectOnce.Do(func() {
 		if c, err := newConnection(connUrl); err != nil {
@@ -46,11 +45,11 @@ func Init(dbName string, connUrl string) (MongoManager, error) {
 			db := c.Database(dbName)
 			dbMgr.database = db
 			dbMgr.client = c
-		}
 
-		// Verify connection
-		if err := dbMgr.Ping(); err != nil {
-			connErr = err
+			// Verify connection
+			if err := dbMgr.Ping(); err != nil {
+				connErr = err
+			}
 		}
 	})
 
@@ -78,15 +77,12 @@ func newConnection(connectionUrl string) (*mongo.Client, error) {
 }
 
 // Database - Returns configured database instance
-func (c *ConnectionManager) Database() (MongoDatabase, error) {
-	if c.database == nil {
-		return nil, errors.New("invalid state, database.Init is not called")
-	}
-	return c.database, nil
+func (c *connectionManager) Database() MongoDatabase {
+	return c.database
 }
 
 // Ping - Validates application's connectivity to the underlying database by pinging
-func (c *ConnectionManager) Ping() error {
+func (c *connectionManager) Ping() error {
 	if err := c.client.Ping(context.TODO(), readpref.Primary()); err != nil {
 		log.Error().Err(err).Msg("unable to connect to DB")
 		return err
@@ -95,7 +91,7 @@ func (c *ConnectionManager) Ping() error {
 }
 
 // Disconnect - Close connection to Database
-func (c *ConnectionManager) Disconnect() error {
+func (c *connectionManager) Disconnect() error {
 	log.Info().Msg("Disconnecting from Database")
 	if err := c.client.Disconnect(context.Background()); err != nil {
 		log.Error().Err(err).Msg("unable to disconnect from DB")
