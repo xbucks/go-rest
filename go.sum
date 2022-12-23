@@ -284,6 +284,8 @@ github.com/rameshsunkara/deferrun v0.0.0-20221222212226-a320e936338c h1:O0nY10vj
 github.com/rameshsunkara/deferrun v0.0.0-20221222212226-a320e936338c/go.mod h1:VV7shFoU8aPXkcJNB3yTBOQHK1Y4GUfY6gGzX+ZhD9M=
 github.com/rameshsunkara/deferrun v0.0.0-20221223021331-f0251bdf3d0e h1:yzFDdwcws5OvVTRot3FirNU9uJw74mK3Fv/Gk9TkI5s=
 github.com/rameshsunkara/deferrun v0.0.0-20221223021331-f0251bdf3d0e/go.mod h1:VV7shFoU8aPXkcJNB3yTBOQHK1Y4GUfY6gGzX+ZhD9M=
+github.com/rameshsunkara/deferrun v1.0.0 h1:z1HrNVTOfbhG8AvOHyHpbkqImPIZNDTR0f7UBw/IAL8=
+github.com/rameshsunkara/deferrun v1.0.0/go.mod h1:VV7shFoU8aPXkcJNB3yTBOQHK1Y4GUfY6gGzX+ZhD9M=
 github.com/rameshsunkara/strikememongo v0.2.5 h1:sRXd2ff6ZJ8jURj6sryrpSVcT/EnJvWNiSRwCAad5PE=
 github.com/rameshsunkara/strikememongo v0.2.5/go.mod h1:vNG9TC4oLQ3RIxjLJr3VQsKNupnCGpDTsSB3ZgxkhfA=
 github.com/rogpeppe/go-internal v1.1.0/go.mod h1:M8bDsm7K2OlrFYOpmOWEs/qY81heoFRclV5y23lUDJ4=
