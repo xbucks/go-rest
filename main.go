@@ -4,6 +4,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/rameshsunkara/deferrun"
 	"github.com/rameshsunkara/go-rest-api-example/internal/server"
 	"github.com/rameshsunkara/go-rest-api-example/pkg/util"
 	"github.com/rs/zerolog"
@@ -36,6 +37,7 @@ var version string
 // @BasePath  /api/v1
 func main() {
 	upTime := time.Now()
+	t := deferrun.NewSignalHandler()
 
 	env := os.Getenv("environment")
 	if env == "" {
@@ -66,7 +68,9 @@ func main() {
 	if dErr != nil {
 		log.Fatal().Err(dErr).Msg("unable to initialize DB connection")
 	}
-	defer dbManager.Disconnect() // TODO: Fix this
+	t.OnSignal(func() {
+		dbManager.Disconnect()
+	})
 
 	// Setup : Server
 	server.Init(serviceInfo, dbManager)

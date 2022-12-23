@@ -2,9 +2,10 @@ package db
 
 import (
 	"context"
-	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"sync"
 	"time"
+
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 
 	"github.com/rs/zerolog/log"
 	"go.mongodb.org/mongo-driver/mongo"

@@ -80,6 +80,7 @@ test:
 
 ## coverage: Measures code coverage
 coverage:
+	go test -coverprofile=coverage.out -covermode=atomic ./... && go tool cover -func=coverage.out
 	go test -race -coverprofile=coverage.out -covermode=atomic ./...
 
 .PHONY: help
