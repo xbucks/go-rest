@@ -280,14 +280,8 @@ github.com/pkg/sftp v1.13.1/go.mod h1:3HaPG6Dq1ILlpPZRO0HVMrsydcdLt6HRDccSgb87qR
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/prometheus/client_model v0.0.0-20190812154241-14fe0d1b01d4/go.mod h1:xMI15A0UPsDsEKsMN9yxemIoYk6Tm2C1GtYGdfGttqA=
-github.com/rameshsunkara/deferrun v0.0.0-20221222212226-a320e936338c h1:O0nY10vj+NL9GX7vx2qzr5zp4CjbPPunb2m1MJQmEJk=
-github.com/rameshsunkara/deferrun v0.0.0-20221222212226-a320e936338c/go.mod h1:VV7shFoU8aPXkcJNB3yTBOQHK1Y4GUfY6gGzX+ZhD9M=
-github.com/rameshsunkara/deferrun v0.0.0-20221223021331-f0251bdf3d0e h1:yzFDdwcws5OvVTRot3FirNU9uJw74mK3Fv/Gk9TkI5s=
-github.com/rameshsunkara/deferrun v0.0.0-20221223021331-f0251bdf3d0e/go.mod h1:VV7shFoU8aPXkcJNB3yTBOQHK1Y4GUfY6gGzX+ZhD9M=
-github.com/rameshsunkara/deferrun v1.0.0 h1:z1HrNVTOfbhG8AvOHyHpbkqImPIZNDTR0f7UBw/IAL8=
-github.com/rameshsunkara/deferrun v1.0.0/go.mod h1:VV7shFoU8aPXkcJNB3yTBOQHK1Y4GUfY6gGzX+ZhD9M=
-github.com/rameshsunkara/deferrun v1.0.1 h1:tOj1AEdRlER6ehjWGGoA78fDlzLn5wYXZaS1dgZodpU=
-github.com/rameshsunkara/deferrun v1.0.1/go.mod h1:VV7shFoU8aPXkcJNB3yTBOQHK1Y4GUfY6gGzX+ZhD9M=
+github.com/rameshsunkara/deferrun v1.0.2 h1:ATgq9mXvEt7BnyOVztx2OayLrXXEVTF4JXLbkdwiA90=
+github.com/rameshsunkara/deferrun v1.0.2/go.mod h1:DevtPwiPGiNZ3ojTwUEY2kx4fQQgeola6wDQ36T7U3Q=
 github.com/rameshsunkara/strikememongo v0.2.5 h1:sRXd2ff6ZJ8jURj6sryrpSVcT/EnJvWNiSRwCAad5PE=
 github.com/rameshsunkara/strikememongo v0.2.5/go.mod h1:vNG9TC4oLQ3RIxjLJr3VQsKNupnCGpDTsSB3ZgxkhfA=
 github.com/rogpeppe/go-internal v1.1.0/go.mod h1:M8bDsm7K2OlrFYOpmOWEs/qY81heoFRclV5y23lUDJ4=

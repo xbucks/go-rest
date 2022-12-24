@@ -6,7 +6,7 @@ require (
 	github.com/bxcodec/faker/v3 v3.8.1
 	github.com/gin-contrib/pprof v1.4.0
 	github.com/gin-gonic/gin v1.8.1
-	github.com/rameshsunkara/deferrun v1.0.1
+	github.com/rameshsunkara/deferrun v1.0.2
 	github.com/rameshsunkara/strikememongo v0.2.5
 	github.com/rs/zerolog v1.28.0
 	github.com/spf13/viper v1.14.0
