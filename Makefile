@@ -33,6 +33,11 @@ docker-build:
 	docker build -t ${DOCKER_IMAGE_NAME} . \
 		--build-arg port=${port} \
 
+docker-build-debug:
+	$(info ---> Building Docker Image: ${DOCKER_IMAGE_NAME}, Exposed Port: ${port})
+	docker build --no-cache --progress plain -t ${DOCKER_IMAGE_NAME} . \
+		--build-arg port=${port} \
+
 ## docker-run: Run the API server as a docker container
 docker-run:
 	$(info ---> Running Docker Container: ${DOCKER_CONTAINER_NAME} in Environment: ${profile})
@@ -80,8 +85,11 @@ test:
 
 ## coverage: Measures code coverage
 coverage:
-	go test -coverprofile=coverage.out -covermode=atomic ./... && go tool cover -func=coverage.out
-	go test -race -coverprofile=coverage.out -covermode=atomic ./...
+	go test ./... -v -coverprofile coverage.out -covermode count
+	go tool cover -func=coverage.out
+
+coverage-html:
+	go tool cover -html=coverage.out
 
 .PHONY: help
 help: Makefile

@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"errors"
 	"sync"
 	"time"
 
@@ -12,7 +13,13 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var connectOnce sync.Once
+var (
+	InvalidConnUrlErr = errors.New("failed to connect to DB, as the connection string is invalid")
+	ClientCreationErr = errors.New("failed to create new client to connect with db")
+	ClientInitErr     = errors.New("failed to initialize db client")
+	ConnectionLeak    = errors.New("unable to disconnect from db, potential connection leak")
+	connectOnce       sync.Once
+)
 
 // ConnectionTimeOut - Max time to establish DB connection // TODO: Move to config
 const ConnectionTimeOut = 10 * time.Second
@@ -40,7 +47,7 @@ func NewMongoManager(dbName string, connUrl string) (MongoManager, error) {
 	dbMgr := &connectionManager{}
 	var connErr error
 	connectOnce.Do(func() {
-		if c, err := newConnection(connUrl); err != nil {
+		if c, err := newClient(connUrl); err != nil {
 			connErr = err
 		} else {
 			db := c.Database(dbName)
@@ -57,13 +64,16 @@ func NewMongoManager(dbName string, connUrl string) (MongoManager, error) {
 	return dbMgr, connErr
 }
 
-// newConnection - Establishes connection using given connection url and returns mongo client
-func newConnection(connectionUrl string) (*mongo.Client, error) {
+// newClient - creates a new Mongo Client to connect to the specified url and initializes the Client
+func newClient(connectionUrl string) (*mongo.Client, error) {
+	if len(connectionUrl) == 0 {
+		return nil, InvalidConnUrlErr
+	}
 	clientOptions := options.Client().ApplyURI(connectionUrl)
 	client, err := mongo.NewClient(clientOptions)
 	if err != nil {
 		log.Error().Err(err).Msg("Connection Failed to Database")
-		return nil, err
+		return nil, ClientCreationErr
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), ConnectionTimeOut)
@@ -71,7 +81,7 @@ func newConnection(connectionUrl string) (*mongo.Client, error) {
 	connErr := client.Connect(ctx)
 	if connErr != nil {
 		log.Error().Err(connErr).Msg("Connection Failed to Database")
-		return nil, err
+		return nil, ClientInitErr
 	}
 
 	return client, nil
@@ -96,7 +106,7 @@ func (c *connectionManager) Disconnect() error {
 	log.Info().Msg("Disconnecting from Database")
 	if err := c.client.Disconnect(context.Background()); err != nil {
 		log.Error().Err(err).Msg("unable to disconnect from DB")
-		return err
+		return ConnectionLeak
 	}
 	log.Info().Msg("Successfully disconnected from DB")
 	return nil
